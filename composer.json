@@ -1,0 +1,10 @@
+{
+    "name": "davide.branchi/gestione-fotografie",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Davide Branchi"
+        }
+    ],
+    "require": {}
+}

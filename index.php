@@ -1,5 +1,11 @@
 <?php
 
+require'vendor/autoload.php';
+
+//Caricamento della variabili d'ambiente dal file .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/');
+$dotenv->load();
+
 // carico il file di configurazione
 require 'application/config/config.php';
 

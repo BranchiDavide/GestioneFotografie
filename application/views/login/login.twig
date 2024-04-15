@@ -1,0 +1,26 @@
+{% include '_templates/header.twig' %}
+<br>
+<br>
+<br>
+<br>
+<div class="container col-12">
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
+        <form class="col-6" method="POST" action="{{ URL }}login">
+            <h2 class="title">Log in</h2>
+            <br>
+            <div class="form-group">
+                <label>Indirizzo Email</label>
+                <input type="email" class="form-control" placeholder="Email" name="email">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" placeholder="Password" name="password">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Log in</button>
+        </form>
+    </div>
+</div>
+
+{% include '_templates/footer.twig' %}

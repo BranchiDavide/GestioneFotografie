@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Configurazione
  *
@@ -23,6 +22,7 @@ $dir = str_replace('\\','/',getcwd().'/');
 $final = $actual_link.str_replace($documentRoot,'',$dir);
 
 define('URL', $final);
-
-
-
+/**
+ * Configurazione twwig
+ */
+Twig::init("application/views");

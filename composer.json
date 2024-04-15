@@ -13,5 +13,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^11"
+    },
+    "autoload": {
+        "classmap": ["application/libs", "application/models"]
     }
 }

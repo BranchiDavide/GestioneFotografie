@@ -1,0 +1,59 @@
+{% include '_templates/header.twig' %}
+<br>
+<br>
+<br>
+<br>
+<div class="container col-12">
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
+        <form class="col-6" method="POST" action="{{ URL }}register">
+            {% if errorMessage is not null %}
+                <div class="alert alert-danger">
+                    {{ errorMessage }}
+                </div>
+            {% endif %}
+            <h2 class="title">Crea account</h2>
+            <br>
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" class="form-control" placeholder="Inserisci nome" name="nome">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Cognome</label>
+                <input type="text" class="form-control" placeholder="Inserisci cognome" name="cognome">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Indirizzo Email</label>
+                <input type="email" class="form-control" placeholder="Inserisci indirizzo Email" name="email">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Data di nascita</label>
+                <input type="date" class="form-control" name="nascita">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Tipo di account</label>
+                <select class="form-control" name="ruolo">
+                    <option value="fotografo">Fotografo</option>
+                    <option value="utente">Utente</option>
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" placeholder="Inserisci password" name="password">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Conferma password</label>
+                <input type="password" class="form-control" placeholder="Inserisci password" name="password-confirm">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Crea account</button>
+        </form>
+    </div>
+</div>
+
+{% include '_templates/footer.twig' %}

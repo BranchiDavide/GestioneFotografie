@@ -27,7 +27,7 @@ class register
                     Twig::render("register/register.twig", ["errorMessage" => "Email non valida!"]);
                     return;
                 }
-                //Date check implemented yet
+                //Date check not implemented yet
                 /*if(!Sanitizer::validateDate($data_nascita)){
                     Twig::render("register/register.twig", ["errorMessage" => "Data di nascita non valida!"]);
                 }*/
@@ -42,7 +42,11 @@ class register
                 Twig::render("register/register.twig", ["errorMessage" => "Non sono stati inseriti tutti i valori!"]);
             }
         }else{
-            Twig::render("register/register.twig", ["errorMessage" => null]);
+            if(Session::hasSessionType()){
+                header("Location: " . URL . "home");
+            }else{
+                Twig::render("register/register.twig", ["errorMessage" => null]);
+            }
         }
     }
 }

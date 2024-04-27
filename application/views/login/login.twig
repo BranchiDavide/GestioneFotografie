@@ -6,6 +6,11 @@
 <div class="container col-12">
     <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
         <form class="col-6" method="POST" action="{{ URL }}login">
+            {% if errorMessage is not null %}
+                <div class="alert alert-danger">
+                    {{ errorMessage }}
+                </div>
+            {% endif %}
             <h2 class="title">Log in</h2>
             <br>
             <div class="form-group">
@@ -19,6 +24,9 @@
             </div>
             <br>
             <button type="submit" class="btn btn-primary">Log in</button>
+            <br>
+            <br>
+            <p>Non hai un account? <a href="{{ URL }}register">Registrati</a></p>
         </form>
     </div>
 </div>

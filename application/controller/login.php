@@ -1,5 +1,4 @@
 <?php
-session_start();
 class login
 {
     public function index(){

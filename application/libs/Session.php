@@ -25,7 +25,7 @@ class Session
 
     public static function isFotografo(){
         if(self::hasSessionType()){
-            if($_SESSION['tipo'] == "fotografo"){
+            if($_SESSION['ruolo'] == "fotografo"){
                 return true;
             }
             else{
@@ -39,7 +39,7 @@ class Session
 
     public static function isUtente(){
         if(self::hasSessionType()){
-            if($_SESSION['tipo'] == "utente"){
+            if($_SESSION['ruolo'] == "utente"){
                 return true;
             }
             else{

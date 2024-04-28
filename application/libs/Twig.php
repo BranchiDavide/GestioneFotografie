@@ -9,6 +9,7 @@ class Twig {
     public static function init($templatePath) {
         $loader = new FilesystemLoader($templatePath);
         self::$twig = new Environment($loader);
+        self::$twig->addGlobal('session', $_SESSION);
     }
 
     public static function render($template, $data = []) {

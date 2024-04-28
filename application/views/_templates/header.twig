@@ -14,10 +14,25 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link" aria-current="page" href="{{ URL }}home">Home</a>
-                    <a class="nav-link active btn btn-primary" style="color: white" aria-current="page" href="{{ URL }}login">Login / Register</a>
-                </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ URL }}home">Home</a>
+                    </li>
+                    {% if session.ruolo %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active btn btn-primary" id="navProfiloDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white" aria-current="page" href="{{ URL }}login">Profilo</a>
+                            <ul class="dropdown-menu" aria-labelledby="navProfiloDropDown">
+                                {% if session.ruolo == "fotografo" %}
+                                    <li><a class="dropdown-item" href="{{ URL }}upload">Carica fotografia</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link active btn btn-primary" style="color: white" aria-current="page" href="{{ URL }}login">Login / Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>

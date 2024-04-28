@@ -1,0 +1,18 @@
+{% include '_templates/header.twig' %}
+<form action="{{ URL }}upload" method="POST" enctype="multipart/form-data">
+    {% if errorMessage is not null %}
+        <div class="alert alert-danger">
+            {{ errorMessage }}
+        </div>
+    {% endif %}
+    <h1 class="title">Carica fotografia</h1>
+    <div class="form-group">
+        <input type="file" class="form-control" name="file" accept=".jpg, .jpeg, .png">
+        <div id="fileHelp" class="form-text">Formati accettati: .jpg, .jpeg, .png</div>
+    </div>
+    <br>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">Carica fotografia</button>
+    </div>
+</form>
+{% include '_templates/footer.twig' %}

@@ -34,4 +34,21 @@
 </div>
 <br>
 <br>
+<br>
+<br>
+<h1 class="title" align="center">Catalogo fotografico</h1>
+<br>
+<div class="container col-8">
+    <div class="row">
+        {% for foto in fotografie %}
+            <div class="card col-4">
+                <img class="card-img-top" src="{{ URL }}{{ foto.getPath }}" alt="Card image cap">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Data: </strong>{{ foto.getDataOra }}</li>
+                    <li class="list-group-item"><strong>Luogo: </strong>{{ foto.getLuogo }}</li>
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% include '_templates/footer.twig' %}

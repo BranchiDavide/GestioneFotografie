@@ -4,6 +4,8 @@ class Home
 
     public function index()
     {
-        Twig::render("home/home.twig");
+        $fotografiaMapper = new FotografiaMapper();
+        $fotografie = $fotografiaMapper->getAll();
+        Twig::render("home/home.twig", ["fotografie" => $fotografie]);
     }
 }

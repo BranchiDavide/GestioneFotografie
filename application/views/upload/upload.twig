@@ -37,8 +37,12 @@
             <br>
             <div class="form-group">
                 <label class="form-label">Seleziona fotografia <span style="color: red">*</span></label>
-                <input type="file" class="form-control" name="file" accept=".jpg, .jpeg, .png" required>
+                <input type="file" id="formFile" class="form-control" name="file" accept=".jpg, .jpeg, .png" required>
                 <div id="fileHelp" class="form-text">Formati accettati: .jpg, .jpeg, .png</div>
+            </div>
+            <br>
+            <div class="item-picture" style="display: none">
+                <img id="previewImage" width="400" height="300">
             </div>
             <br>
             <div class="form-group">
@@ -46,7 +50,6 @@
             </div>
         </form>
     </div>
-
 </div>
-
+<script src="{{ URL }}public/js/imagePreview.js"></script>
 {% include '_templates/footer.twig' %}

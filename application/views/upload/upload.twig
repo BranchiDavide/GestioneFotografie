@@ -1,18 +1,52 @@
 {% include '_templates/header.twig' %}
-<form action="{{ URL }}upload" method="POST" enctype="multipart/form-data">
-    {% if errorMessage is not null %}
-        <div class="alert alert-danger">
-            {{ errorMessage }}
-        </div>
-    {% endif %}
-    <h1 class="title">Carica fotografia</h1>
-    <div class="form-group">
-        <input type="file" class="form-control" name="file" accept=".jpg, .jpeg, .png">
-        <div id="fileHelp" class="form-text">Formati accettati: .jpg, .jpeg, .png</div>
+<br>
+<br>
+<div class="container col-12">
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
+        <form action="{{ URL }}upload" method="POST" enctype="multipart/form-data">
+            {% if errorMessage is not null %}
+                <div class="alert alert-danger">
+                    {{ errorMessage }}
+                </div>
+            {% endif %}
+            <h1 class="title">Carica fotografia</h1>
+            <div class="form-group">
+                <label class="form-label">Data e ora <span style="color: red">*</span></label>
+                <input class="form-control" type="datetime-local" name="data-ora" required>
+            </div>
+            <br>
+            <div class="form-group">
+                <label class="form-label">Luogo <span style="color: red">*</span></label>
+                <input class="form-control" type="text" maxlength="64" name="luogo" required>
+                <div id="fileHelp" class="form-text">Max. 64 caratteri</div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label class="form-label">Soggetto</label>
+                <input class="form-control" type="text" maxlength="64" name="soggetto">
+                <div id="fileHelp" class="form-text">Max. 64 caratteri</div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label class="form-label">Tipologia <span style="color: red">*</span></label>
+                <select class="form-control" name="tipologia" required>
+                    <option value="colori">Colori</option>
+                    <option value="b/n">Bianco e nero</option>
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label class="form-label">Seleziona fotografia <span style="color: red">*</span></label>
+                <input type="file" class="form-control" name="file" accept=".jpg, .jpeg, .png" required>
+                <div id="fileHelp" class="form-text">Formati accettati: .jpg, .jpeg, .png</div>
+            </div>
+            <br>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Carica fotografia</button>
+            </div>
+        </form>
     </div>
-    <br>
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit">Carica fotografia</button>
-    </div>
-</form>
+
+</div>
+
 {% include '_templates/footer.twig' %}

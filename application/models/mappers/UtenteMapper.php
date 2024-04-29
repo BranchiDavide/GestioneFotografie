@@ -6,8 +6,15 @@ class UtenteMapper
     public function __construct(){
         $this->db = \Database::getConnection();
     }
-    public function getAll(){
-
+    public function getAllActive(){
+        $stm  = $this->db->prepare("SELECT * FROM utente");
+        $stm->execute();
+        $result = $stm->fetchAll();
+        $users = array();
+        foreach($result as $user){
+            $users[] = new Utente($user["id"], $user["nome"], $user["cognome"], $user["email"], $user["data_nascita"], $user["password"], $user["ruolo_nome"]);
+        }
+        return $users;
     }
     public function getByEmail($email){
         $stmUtente = $this->db->prepare("SELECT * FROM utente WHERE email=:email LIMIT 1");

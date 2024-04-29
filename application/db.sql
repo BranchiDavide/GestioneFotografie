@@ -32,7 +32,7 @@ CREATE TABLE fotografia(
   id INT AUTO_INCREMENT PRIMARY KEY,
   path VARCHAR(255) NOT NULL,
   data_ora DATETIME NOT NULL,
-  luogo VARCHAR(255),
+  luogo VARCHAR(255) NOT NULL,
   soggetto VARCHAR(255),
   tipologia ENUM('b/n', 'colori') NOT NULL,
   visualizzazioni INT NOT NULL DEFAULT 0,

@@ -8,11 +8,24 @@ class upload
             if(Session::isFotografo()){
                 if($_SERVER["REQUEST_METHOD"] == "POST"){
                     try{
+                        $dataOra = Sanitizer::sanitize($_POST["data-ora"]);
+                        $luogo = Sanitizer::sanitize($_POST["luogo"]);
+                        $soggetto = null;
+                        if($_POST["soggetto"]){
+                            $soggetto = Sanitizer::sanitize($_POST["soggetto"]);
+                        }
+                        $tipologia = Sanitizer::sanitize($_POST["tipologia"]);
+                        if($tipologia != "b/n" && $tipologia != "colori"){
+                            Twig::render("upload/upload.twig", ["errorMessage" => "Tipologia non valida!"]);
+                            return;
+                        }
+                        // Gestione dell'upload del file
                         $fileName = $_FILES["file"]["name"];
                         Sanitizer::isSetted($fileName);
                         $fileTmpName = $_FILES["file"]["tmp_name"];
                         if(!is_uploaded_file($fileTmpName)){
                             Twig::render("upload/upload.twig", ["errorMessage" => "Errore durante il caricamento dell'immagine"]);
+                            return;
                         }
                         $fileRawExt = explode(".", $fileName);
                         $fileExt = strtolower(end($fileRawExt));
@@ -30,10 +43,13 @@ class upload
                         $uuid = Uuid::uuid4()->toString();
                         $filePath = "public/datastore/" . $uuid . "." . $fileExt;
                         move_uploaded_file($fileTmpName, $filePath);
-                        // Save image path to db not implemented yet
+
+                        $fotografiaMapper = new FotografiaMapper();
+                        $fotografiaMapper->insert($filePath, $dataOra, $luogo, $soggetto, $tipologia, 0, $_SESSION["utente-id"]);
+
                         Twig::render("_templates/successPage.twig", ["successMsg" => "Fotografia caricata con successo!"]);
                     }catch (Exception $exp){
-                        Twig::render("upload/upload.twig", ["errorMessage" => "Non è stata caricata alcuna immagine!"]);
+                        Twig::render("upload/upload.twig", ["errorMessage" => "Non sono stati compilati tutti i campi!"]);
                     }
                 }else{
                     Twig::render('upload/upload.twig');

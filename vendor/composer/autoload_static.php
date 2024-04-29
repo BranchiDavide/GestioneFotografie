@@ -107,6 +107,8 @@ class ComposerStaticInit2cc46fb97b7b2470bd1007540b1f65d8
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Database' => __DIR__ . '/../..' . '/application/libs/Database.php',
+        'Fotografia' => __DIR__ . '/../..' . '/application/models/Fotografia.php',
+        'FotografiaMapper' => __DIR__ . '/../..' . '/application/models/mappers/FotografiaMapper.php',
         'PHPUnit\\Event\\Application\\Finished' => __DIR__ . '/..' . '/phpunit/phpunit/src/Event/Events/Application/Finished.php',
         'PHPUnit\\Event\\Application\\FinishedSubscriber' => __DIR__ . '/..' . '/phpunit/phpunit/src/Event/Events/Application/FinishedSubscriber.php',
         'PHPUnit\\Event\\Application\\Started' => __DIR__ . '/..' . '/phpunit/phpunit/src/Event/Events/Application/Started.php',

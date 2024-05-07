@@ -6,6 +6,7 @@ class UtenteMapper
     public function __construct(){
         $this->db = \Database::getConnection();
     }
+
     public function getAllActive(){
         $stm  = $this->db->prepare("SELECT * FROM utente");
         $stm->execute();
@@ -16,6 +17,7 @@ class UtenteMapper
         }
         return $users;
     }
+
     public function getByEmail($email){
         $stmUtente = $this->db->prepare("SELECT * FROM utente WHERE email=:email LIMIT 1");
         $stmUtente->bindParam(":email", $email);
@@ -35,6 +37,7 @@ class UtenteMapper
             return new Utente($resultUtente[0]["id"], $resultUtente[0]["nome"], $resultUtente[0]["cognome"], $resultUtente[0]["email"], $resultUtente[0]["data_nascita"], $resultUtente[0]["password"], $resultUtente[0]["ruolo_nome"]);
         }
     }
+
     public function getByEmailOnlyActive($email){
         $stmUtente = $this->db->prepare("SELECT * FROM utente WHERE email=:email LIMIT 1");
         $stmUtente->bindParam(":email", $email);
@@ -46,6 +49,20 @@ class UtenteMapper
             return null;
         }
     }
+
+    public function getById($id){
+        $stm = $this->db->prepare("SELECT * FROM utente WHERE id=:id LIMIT 1");
+        $stm->bindParam(":id", $id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        if($result){
+            $utente = $result[0];
+            return new Utente($utente["id"], $utente["nome"], $utente["cognome"], $utente["email"], $utente["data_nascita"], $utente["password"], $utente["ruolo_nome"]);
+        }else{
+            return null;
+        }
+    }
+
     public function insert($nome, $cognome, $email, $data_nascita, $password, $ruolo_nome){
         $stm = $this->db->prepare("INSERT INTO utente(nome, cognome, email, data_nascita, password, ruolo_nome) VALUES (:nome, :cognome, :email, :data_nascita, :password, :ruolo_nome)");
         $stm->bindParam(":nome", $nome);
@@ -56,6 +73,7 @@ class UtenteMapper
         $stm->bindParam(":ruolo_nome", $ruolo_nome);
         $stm->execute();
     }
+    
     public function insertTemp($nome, $cognome, $email, $data_nascita, $password, $ruolo_nome){
         $stm = $this->db->prepare("INSERT INTO tempUtente(nome, cognome, email, data_nascita, password, ruolo_nome) VALUES (:nome, :cognome, :email, :data_nascita, :password, :ruolo_nome)");
         $stm->bindParam(":nome", $nome);

@@ -10,6 +10,7 @@ class Twig {
         $loader = new FilesystemLoader($templatePath);
         self::$twig = new Environment($loader);
         self::$twig->addGlobal('session', $_SESSION);
+        self::$twig->addGlobal('URL', URL);
     }
 
     public static function render($template, $data = []) {

@@ -1,0 +1,29 @@
+{% include '_templates/header.twig' %}
+
+<br>
+<br>
+<div class="container col-12">
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
+        <img src="{{ URL }}{{ fotografia.path }}" class="col-12">
+    </div>
+    <br>
+    <div class="align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-md-6 col-sm-12">
+        <h3>Dettagli</h3>
+        <br>
+        <strong>Autore: </strong><span>{{ fotografia.getUtenteId }}</span>
+        <br>
+        <strong>Data: </strong><span>{{ fotografia.getDataOra }}</span>
+        <br>
+        <strong>Luogo: </strong>{{ fotografia.luogo }}
+        <br>
+        {% if fotografia.soggetto %}
+            <strong>Soggetto: </strong>{{ fotografia.soggetto }}
+            <br>
+        {% endif %}
+        <strong>Tipologia: </strong><span>{{ fotografia.tipologia }}</span>
+        <br>
+        <strong>Visualizzazioni: </strong><span>{{ fotografia.visualizzazioni }}</span>
+    </div>
+</div>
+
+{% include '_templates/footer.twig' %}

@@ -6,6 +6,7 @@ class Home
     {
         $fotografiaMapper = new FotografiaMapper();
         $fotografie = $fotografiaMapper->getAll();
-        Twig::render("home/home.twig", ["fotografie" => $fotografie]);
+        $best3 = $fotografiaMapper->getClassifica3Best();
+        Twig::render("home/home.twig", ["fotografie" => $fotografie, "best3" => $best3]);
     }
 }

@@ -1,6 +1,15 @@
 <?php
 session_start();
 
+if (!isset($_SESSION["photos-seen"])) {
+    /**
+     * Array per la memorizzazione delle fotografie visualizzate
+     * la visualizzazione dell'utente viene conteggiata unoicamente una
+     * volta per sessione
+     */
+    $_SESSION["photos-seen"] = array();
+}
+
 require'vendor/autoload.php';
 
 //Caricamento della variabili d'ambiente dal file .env

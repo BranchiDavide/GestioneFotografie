@@ -22,6 +22,12 @@ class fotografie
             if(Session::hasSessionType()){
                 $valutazionePresente = $fotografiaMapper->getValutazioneByUserId($id, $_SESSION["utente-id"]);
             }
+            $photosSeen = $_SESSION["photos-seen"];
+            if(!in_array($id, $photosSeen)){
+                $photosSeen[] = $id;
+                $_SESSION["photos-seen"] = $photosSeen;
+                $fotografiaMapper->incrementViews($id);
+            }
             Twig::render("fotografie/dettagli.twig", ["fotografia" => $fotografia, "score" => $score, "valutazioni" => $valutazioni, "valutazionePresente" => $valutazionePresente]);
         }catch (Exception $e){
             Twig::render("_templates/errorPage.twig", ["errorMsg" => "Fotografia non trovata!"]);

@@ -124,4 +124,57 @@ class FotografiaMapper
             return null;
         }
     }
+
+    public function incrementViews($id){
+        $stm = $this->db->prepare("UPDATE fotografia SET visualizzazioni=visualizzazioni+1 WHERE id=:id");
+        $stm->bindParam(":id", $id);
+        $stm->execute();
+    }
+
+    public function getClassifica(){
+        $stm = $this->db->prepare("
+            SELECT id, path, data_ora, luogo, soggetto, tipologia, visualizzazioni, fotografia.utente_id, AVG(stelle) AS 'score'
+            FROM valuta INNER JOIN fotografia ON fotografia.id=fotografia_id
+            GROUP BY(id)
+            ORDER BY score DESC
+        ");
+        $stm->execute();
+        $result = $stm->fetchAll();
+        $data = array();
+        if($result){
+            foreach($result as $fotografia){
+                $data[] = array(
+                    new Fotografia($fotografia["id"], $fotografia["path"], $fotografia["data_ora"], $fotografia["luogo"], $fotografia["soggetto"], $fotografia["tipologia"], $fotografia["visualizzazioni"], $fotografia["utente_id"]),
+                    $fotografia["score"]
+                );
+            }
+            return $data;
+        }else{
+            return null;
+        }
+    }
+
+    public function getClassifica3Best(){
+        $stm = $this->db->prepare("
+            SELECT id, path, data_ora, luogo, soggetto, tipologia, visualizzazioni, fotografia.utente_id, AVG(stelle) AS 'score'
+            FROM valuta INNER JOIN fotografia ON fotografia.id=fotografia_id
+            GROUP BY(id)
+            ORDER BY score DESC
+            LIMIT 3
+        ");
+        $stm->execute();
+        $result = $stm->fetchAll();
+        $data = array();
+        if($result){
+            foreach($result as $fotografia){
+                $data[] = array(
+                    new Fotografia($fotografia["id"], $fotografia["path"], $fotografia["data_ora"], $fotografia["luogo"], $fotografia["soggetto"], $fotografia["tipologia"], $fotografia["visualizzazioni"], $fotografia["utente_id"]),
+                    $fotografia["score"]
+                );
+            }
+            return $data;
+        }else{
+            return null;
+        }
+    }
 }

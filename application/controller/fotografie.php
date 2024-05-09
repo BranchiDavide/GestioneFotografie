@@ -28,7 +28,9 @@ class fotografie
                 $_SESSION["photos-seen"] = $photosSeen;
                 $fotografiaMapper->incrementViews($id);
             }
-            Twig::render("fotografie/dettagli.twig", ["fotografia" => $fotografia, "score" => $score, "valutazioni" => $valutazioni, "valutazionePresente" => $valutazionePresente]);
+            $commenti = $fotografiaMapper->getCommenti($id);
+            Twig::render("fotografie/dettagli.twig", ["fotografia" => $fotografia, "score" => $score, "valutazioni" => $valutazioni, "valutazionePresente" => $valutazionePresente, "commenti" => $commenti]);
+            unset($_SESSION['showSuccessMsg']);
         }catch (Exception $e){
             Twig::render("_templates/errorPage.twig", ["errorMsg" => "Fotografia non trovata!"]);
         }
@@ -73,6 +75,32 @@ class fotografie
                 }catch(Exception $ex){
                     $response = array("status" => "FAILED", "ex" => $ex->getMessage());
                     echo json_encode($response);
+                }
+            }
+        }
+    }
+
+    public function commenta($id = null){
+        if(Session::hasSessionType()){
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                try{
+                    $id = Sanitizer::sanitize($id);
+                    $contenuto = Sanitizer::sanitize($_POST["contenuto"]);
+                    $fotografiaMapper = new FotografiaMapper();
+                    $fotografia = $fotografiaMapper->getById($id);
+                    if(!$fotografia){
+                        Twig::render("_templates/errorPage.twig", ["errorMsg" => "Fotografia non trovata!"]);
+                        return;
+                    }
+                    if(strlen($contenuto) <= 0 || strlen($contenuto) > 500){
+                        Twig::render("_templates/errorPage.twig", ["errorMsg" => "Errore, caratteri commento non validi!"]);
+                        return;
+                    }
+                    $fotografiaMapper->insertCommento($id, $_SESSION["utente-id"], $contenuto);
+                    $_SESSION["showSuccessMsg"] = "Commento aggiunto con successo!";
+                    header("Location: " . URL . "fotografie/dettagli/" . $id . "#comments");
+                }catch (Exception $e){
+                    Twig::render("_templates/errorPage.twig", ["errorMsg" => "Errore nell'inserimento del commento!"]);
                 }
             }
         }

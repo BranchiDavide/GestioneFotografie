@@ -177,4 +177,30 @@ class FotografiaMapper
             return null;
         }
     }
+
+    public function getCommenti($fotografia_id){
+        $stm = $this->db->prepare("SELECT * FROM commenta WHERE fotografia_id=:fotografia_id ORDER BY id DESC");
+        $stm->bindParam(":fotografia_id", $fotografia_id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        if($result){
+            $data = array();
+            $utenteMapper = new UtenteMapper();
+            foreach($result as $commento){
+                $utente = $utenteMapper->getById($commento["utente_id"]);
+                $data[] = array($utente->getNome() . " " . $utente->getCognome(), $commento["contenuto"]);
+            }
+            return $data;
+        }else{
+            return null;
+        }
+    }
+
+    public function insertCommento($fotografia_id, $utente_id, $contenuto){
+        $stm = $this->db->prepare("INSERT INTO commenta(fotografia_id, utente_id, contenuto) VALUES(:fotografia_id, :utente_id, :contenuto)");
+        $stm->bindParam(":fotografia_id", $fotografia_id);
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->bindParam(":contenuto", $contenuto);
+        $stm->execute();
+    }
 }

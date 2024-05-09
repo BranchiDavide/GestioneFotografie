@@ -65,15 +65,40 @@
     </div>
     <div class="row">
         <div class="align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-md-6 col-sm-12">
-            <h3>Commenti</h3>
+            <h3 id="comments">Commenti</h3>
             <br>
+            <h4>Aggiungi un commento</h4>
+            {% if session.ruolo %}
+                <form action="{{ URL }}fotografie/commenta/{{ fotografia.id }}" method="POST">
+                    <textarea required name="contenuto" placeholder="Inserisci testo" class="form-control" style="height: 100px" maxlength="500"></textarea>
+                    <div id="fileHelp" class="form-text">Max. 500 caratteri</div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Commenta</button>
+                </form>
+                {% if session.showSuccessMsg %}
+                    <div class="alert alert-success">
+                        {{ session.showSuccessMsg }}
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>Devi avere un'account per aggiungere un commento!</p>
+            {% endif %}
+            <hr>
+            {% if commenti %}
+                {% for commento in commenti %}
+                    <strong>{{ commento[0] }}:</strong>
+                    <p>{{ commento[1]|nl2br }}</p>
+                {% endfor %}
+            {% else %}
+                <p>Non ci sono ancora commenti!</p>
+            {% endif %}
         </div>
         <div class="align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-md-6 col-sm-12">
             <h3>Valutazioni degli utenti</h3>
             <br>
             {% if valutazioni %}
                 {% for valutazione in valutazioni %}
-                    {{ valutazione[0] }}
+                    <strong>{{ valutazione[0] }}:</strong>
                     <br>
                     {% for i in range(1, 5) %}
                         {% if i <= valutazione[1] %}
@@ -93,4 +118,5 @@
     </div>
 </div>
 <script src="{{ URL }}public/js/valutazioniManager.js"></script>
+
 {% include '_templates/footer.twig' %}

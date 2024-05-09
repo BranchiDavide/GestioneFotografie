@@ -13,7 +13,7 @@ abstract class Database
                 self::$_connection = new PDO("mysql:host = {$hostname}; dbname={$db}; port={$port}",
                     $username, $password);
             }catch(PDOException $ex){
-                die($ex);
+                die("500 - Internal Server Error");
             }
         }
         return self::$_connection;

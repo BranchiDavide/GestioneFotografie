@@ -4,26 +4,93 @@
 <br>
 <div class="container col-12">
     <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
-        <img src="{{ URL }}{{ fotografia.path }}" class="col-12">
+        <img src="{{ URL }}{{ fotografia.path }}" class="col-12" id="foto" data-id="{{ fotografia.id }}">
     </div>
     <br>
-    <div class="align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-md-6 col-sm-12">
-        <h3>Dettagli</h3>
-        <br>
-        <strong>Autore: </strong><span>{{ fotografia.getUtenteId }}</span>
-        <br>
-        <strong>Data: </strong><span>{{ fotografia.getDataOra }}</span>
-        <br>
-        <strong>Luogo: </strong>{{ fotografia.luogo }}
-        <br>
-        {% if fotografia.soggetto %}
-            <strong>Soggetto: </strong>{{ fotografia.soggetto }}
+    <div class="row">
+        <div class="align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-md-6 col-sm-12">
+            <h3>Dettagli</h3>
             <br>
-        {% endif %}
-        <strong>Tipologia: </strong><span>{{ fotografia.tipologia }}</span>
-        <br>
-        <strong>Visualizzazioni: </strong><span>{{ fotografia.visualizzazioni }}</span>
+            <strong>Autore: </strong><span>{{ fotografia.getUtenteId }}</span>
+            <br>
+            <strong>Data: </strong><span>{{ fotografia.getDataOra }}</span>
+            <br>
+            <strong>Luogo: </strong>{{ fotografia.luogo }}
+            <br>
+            {% if fotografia.soggetto %}
+                <strong>Soggetto: </strong>{{ fotografia.soggetto }}
+                <br>
+            {% endif %}
+            <strong>Tipologia: </strong><span>{{ fotografia.tipologia }}</span>
+            <br>
+            <strong>Visualizzazioni: </strong><span>{{ fotografia.visualizzazioni }}</span>
+        </div>
+        <div class="align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded float-right col-md-6 col-sm-12">
+            <h3>Valutazione</h3>
+            <br>
+            <strong>Punteggio: </strong>
+            {% if score %}
+                <span>{{ score }}</span>
+            {% else %}
+                <span>Non ci sono ancora valutazioni!</span>
+            {% endif %}
+            <br>
+            <br>
+            <h4>La tua valutazione</h4>
+            {% if session.ruolo %}
+                <div class="stars">
+                    {% if valutazionePresente %}
+                        {% for i in range(1, 5) %}
+                            {% if i <= valutazionePresente %}
+                                <img src="{{ URL }}public/assets/images/star_filled.png" class="star" width="40">
+                            {% else %}
+                                <img src="{{ URL }}public/assets/images/star_empty.png" class="star" width="40">
+                            {% endif %}
+                        {% endfor %}
+                        <button class="btn btn-primary" id="updateValutazione">Aggiorna valutazione</button>
+                    {% else %}
+                        <img src="{{ URL }}public/assets/images/star_empty.png" class="star" width="40">
+                        <img src="{{ URL }}public/assets/images/star_empty.png" class="star" width="40">
+                        <img src="{{ URL }}public/assets/images/star_empty.png" class="star" width="40">
+                        <img src="{{ URL }}public/assets/images/star_empty.png" class="star" width="40">
+                        <img src="{{ URL }}public/assets/images/star_empty.png" class="star" width="40">
+                        <button class="btn btn-primary" id="addValutazione">Aggiungi valutazione</button>
+                    {% endif %}
+                    <button class="btn btn-outline-danger" id="resetStarsBtn">X</button>
+                </div>
+            {% else %}
+                <p>Devi avere un'account per aggiungere una valutazione!</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-md-6 col-sm-12">
+            <h3>Commenti</h3>
+            <br>
+        </div>
+        <div class="align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-md-6 col-sm-12">
+            <h3>Valutazioni degli utenti</h3>
+            <br>
+            {% if valutazioni %}
+                {% for valutazione in valutazioni %}
+                    {{ valutazione[0] }}
+                    <br>
+                    {% for i in range(1, 5) %}
+                        {% if i <= valutazione[1] %}
+                            <img src="{{ URL }}public/assets/images/star_filled.png" width="40">
+                        {% else %}
+                            <img src="{{ URL }}public/assets/images/star_empty.png" width="40">
+                        {% endif %}
+                    {% endfor %}
+                    <br>
+                    <br>
+                {% endfor %}
+            {% else %}
+                <p>Non ci sono ancora valutazioni!</p>
+            {% endif %}
+            <br>
+        </div>
     </div>
 </div>
-
+<script src="{{ URL }}public/js/valutazioniManager.js"></script>
 {% include '_templates/footer.twig' %}

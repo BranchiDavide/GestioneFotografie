@@ -11,7 +11,7 @@ class Sanitizer
     }
 
     public static function isSetted($data){
-        if(!$data){
+        if(!$data && $data != 0){
             throw new Exception("Valori inseriti non validi");
         }
     }

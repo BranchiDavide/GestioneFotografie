@@ -1,6 +1,6 @@
 {% include '_templates/header.twig' %}
 <br>
-<div class="container col-8">
+<div class="container col-md-8 col-sm-12">
     <div id="homeCarouselIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#homeCarouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -38,10 +38,10 @@
 <br>
 <h1 class="title" align="center">Catalogo fotografico</h1>
 <br>
-<div class="container col-8">
+<div class="container col-md-8 col-sm-12">
     <div class="row">
         {% for foto in fotografie %}
-                <div class="card col-4">
+                <div class="card col-md-4 col-sm-12">
                     <a href="{{ URL }}fotografie/dettagli/{{ foto.id }}" class="text-decoration-none">
                         <img class="card-img-top" src="{{ URL }}{{ foto.getPath }}" alt="Card image cap">
                         <ul class="list-group list-group-flush">

@@ -44,18 +44,84 @@ class FotografiaMapper
     }
 
     public function changeIdUtenteToName($fotografia){
-        $userMapper = new UtenteMapper();
+        $utenteMapper = new UtenteMapper();
         if(is_array($fotografia)){
             foreach($fotografia as $f){
                 $utente_id = $f->getUtenteId();
-                $utente = $userMapper->getById($utente_id);
+                $utente = $utenteMapper->getById($utente_id);
                 $f->setUtenteId($utente->getNome() . " " . $utente->getCognome());
             }
         }else{
             $utente_id = $fotografia->getUtenteId();
-            $utente = $userMapper->getById($utente_id);
+            $utente = $utenteMapper->getById($utente_id);
             $fotografia->setUtenteId($utente->getNome() . " " . $utente->getCognome());
         }
         return $fotografia;
+    }
+
+    public function getScore($id){
+        $stm = $this->db->prepare("SELECT AVG(stelle) AS 'score' FROM valuta WHERE fotografia_id=:id");
+        $stm->bindParam(":id", $id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        if($result){
+            return $result[0]["score"];
+        }else{
+            return null;
+        }
+    }
+
+    public function getAllValutazioni($id){
+        $stm = $this->db->prepare("SELECT * FROM valuta WHERE fotografia_id=:id");
+        $stm->bindParam(":id", $id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        if($result){
+            $data = array();
+            $utenteMapper = new UtenteMapper();
+            foreach($result as $valutazione){
+                $utente = $utenteMapper->getById($valutazione["utente_id"]);
+                $data[] = array($utente->getNome() . " " . $utente->getCognome(), $valutazione["stelle"]);
+            }
+            return $data;
+        }else{
+            return null;
+        }
+    }
+
+    public function insertValutazione($fotografia_id, $utente_id, $stelle){
+        $stm = $this->db->prepare("INSERT INTO valuta(fotografia_id, utente_id, stelle) VALUES(:fotografia_id, :utente_id, :stelle)");
+        $stm->bindParam(":fotografia_id", $fotografia_id);
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->bindParam(":stelle", $stelle);
+        $stm->execute();
+    }
+
+    public function updateValutazione($fotografia_id, $utente_id, $stelle){
+        $stm = $this->db->prepare("UPDATE valuta SET stelle=:stelle WHERE fotografia_id=:fotografia_id AND utente_id=:utente_id");
+        $stm->bindParam(":fotografia_id", $fotografia_id);
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->bindParam(":stelle", $stelle);
+        $stm->execute();
+    }
+
+    public function deleteValutazione($fotografia_id, $utente_id){
+        $stm = $this->db->prepare("DELETE FROM valuta WHERE fotografia_id=:fotografia_id AND utente_id=:utente_id");
+        $stm->bindParam(":fotografia_id", $fotografia_id);
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->execute();
+    }
+
+    public function getValutazioneByUserId($fotografia_id, $utente_id){
+        $stm = $this->db->prepare("SELECT * FROM valuta WHERE fotografia_id=:fotografia_id AND utente_id=:utente_id");
+        $stm->bindParam(":fotografia_id", $fotografia_id);
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        if($result){
+            return $result[0]["stelle"];
+        }else{
+            return null;
+        }
     }
 }

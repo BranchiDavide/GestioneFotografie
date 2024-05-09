@@ -46,7 +46,7 @@
                 <div class="stars">
                     {% if valutazionePresente %}
                         {% for i in range(1, 5) %}
-                            {% if i <= valutazionePresente %}
+                            {% if i <= valutazionePresente.stelle %}
                                 <img src="{{ URL }}public/assets/images/star_filled.png" class="star" width="40">
                             {% else %}
                                 <img src="{{ URL }}public/assets/images/star_empty.png" class="star" width="40">
@@ -90,13 +90,15 @@
             {% endif %}
             <hr>
             {% if commenti %}
+                {% set commentiCounter = 0 %}
                 {% for commento in commenti %}
-                    {% if commento[2] == session['utente-id'] %}
-                        <i data-commentId="{{ commento[3] }}" class="fa-solid fa-trash me-2 deleteCommentIcon"></i>
-                        <i data-commentId="{{ commento[3] }}" class="fa-solid fa-pen-to-square me-2 editCommentIcon"></i>
+                    {% if commento.getUtenteId == session['utente-id'] %}
+                        <i data-commentId="{{ commento.id }}" class="fa-solid fa-trash me-2 deleteCommentIcon"></i>
+                        <i data-commentId="{{ commento.id }}" class="fa-solid fa-pen-to-square me-2 editCommentIcon"></i>
                     {% endif %}
-                    <strong>{{ commento[0] }}:</strong>
-                    <p>{{ commento[1]|nl2br }}</p>
+                    <strong>{{ commentiWithNome[commentiCounter].getUtenteId }}:</strong>
+                    <p>{{ commento.contenuto|nl2br }}</p>
+                    {% set commentiCounter = commentiCounter + 1 %}
                 {% endfor %}
             {% else %}
                 <p>Non ci sono ancora commenti!</p>
@@ -107,10 +109,10 @@
             <br>
             {% if valutazioni %}
                 {% for valutazione in valutazioni %}
-                    <strong>{{ valutazione[0] }}:</strong>
+                    <strong>{{ valutazione.getUtenteId }}:</strong>
                     <br>
                     {% for i in range(1, 5) %}
-                        {% if i <= valutazione[1] %}
+                        {% if i <= valutazione.stelle %}
                             <img src="{{ URL }}public/assets/images/star_filled.png" width="40">
                         {% else %}
                             <img src="{{ URL }}public/assets/images/star_empty.png" width="40">

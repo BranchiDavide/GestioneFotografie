@@ -448,6 +448,8 @@ class ComposerStaticInit2cc46fb97b7b2470bd1007540b1f65d8
     public static $classMap = array (
         'Application' => __DIR__ . '/../..' . '/application/libs/application.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Commento' => __DIR__ . '/../..' . '/application/models/Commento.php',
+        'CommentoMapper' => __DIR__ . '/../..' . '/application/models/mappers/CommentoMapper.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Database' => __DIR__ . '/../..' . '/application/libs/Database.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
@@ -1710,6 +1712,8 @@ class ComposerStaticInit2cc46fb97b7b2470bd1007540b1f65d8
         'Utente' => __DIR__ . '/../..' . '/application/models/Utente.php',
         'UtenteMapper' => __DIR__ . '/../..' . '/application/models/mappers/UtenteMapper.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
+        'Valutazione' => __DIR__ . '/../..' . '/application/models/Valutazione.php',
+        'ValutazioneMapper' => __DIR__ . '/../..' . '/application/models/mappers/ValutazioneMapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

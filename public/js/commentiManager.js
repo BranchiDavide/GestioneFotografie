@@ -16,7 +16,6 @@ for(let icon of deleteIcons){
                 const data = {
                     "id":icon.getAttribute("data-commentId")
                 };
-                console.log(data);
                 let response = await fetch(URL + "fotografie/eliminacommento", {
                    method: "POST",
                    headers: {

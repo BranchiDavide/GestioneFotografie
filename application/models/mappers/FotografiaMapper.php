@@ -59,72 +59,6 @@ class FotografiaMapper
         return $fotografia;
     }
 
-    public function getScore($id){
-        $stm = $this->db->prepare("SELECT AVG(stelle) AS 'score' FROM valuta WHERE fotografia_id=:id");
-        $stm->bindParam(":id", $id);
-        $stm->execute();
-        $result = $stm->fetchAll();
-        if($result){
-            return $result[0]["score"];
-        }else{
-            return null;
-        }
-    }
-
-    public function getAllValutazioni($id){
-        $stm = $this->db->prepare("SELECT * FROM valuta WHERE fotografia_id=:id");
-        $stm->bindParam(":id", $id);
-        $stm->execute();
-        $result = $stm->fetchAll();
-        if($result){
-            $data = array();
-            $utenteMapper = new UtenteMapper();
-            foreach($result as $valutazione){
-                $utente = $utenteMapper->getById($valutazione["utente_id"]);
-                $data[] = array($utente->getNome() . " " . $utente->getCognome(), $valutazione["stelle"]);
-            }
-            return $data;
-        }else{
-            return null;
-        }
-    }
-
-    public function insertValutazione($fotografia_id, $utente_id, $stelle){
-        $stm = $this->db->prepare("INSERT INTO valuta(fotografia_id, utente_id, stelle) VALUES(:fotografia_id, :utente_id, :stelle)");
-        $stm->bindParam(":fotografia_id", $fotografia_id);
-        $stm->bindParam(":utente_id", $utente_id);
-        $stm->bindParam(":stelle", $stelle);
-        $stm->execute();
-    }
-
-    public function updateValutazione($fotografia_id, $utente_id, $stelle){
-        $stm = $this->db->prepare("UPDATE valuta SET stelle=:stelle WHERE fotografia_id=:fotografia_id AND utente_id=:utente_id");
-        $stm->bindParam(":fotografia_id", $fotografia_id);
-        $stm->bindParam(":utente_id", $utente_id);
-        $stm->bindParam(":stelle", $stelle);
-        $stm->execute();
-    }
-
-    public function deleteValutazione($fotografia_id, $utente_id){
-        $stm = $this->db->prepare("DELETE FROM valuta WHERE fotografia_id=:fotografia_id AND utente_id=:utente_id");
-        $stm->bindParam(":fotografia_id", $fotografia_id);
-        $stm->bindParam(":utente_id", $utente_id);
-        $stm->execute();
-    }
-
-    public function getValutazioneByUserId($fotografia_id, $utente_id){
-        $stm = $this->db->prepare("SELECT * FROM valuta WHERE fotografia_id=:fotografia_id AND utente_id=:utente_id");
-        $stm->bindParam(":fotografia_id", $fotografia_id);
-        $stm->bindParam(":utente_id", $utente_id);
-        $stm->execute();
-        $result = $stm->fetchAll();
-        if($result){
-            return $result[0]["stelle"];
-        }else{
-            return null;
-        }
-    }
-
     public function incrementViews($id){
         $stm = $this->db->prepare("UPDATE fotografia SET visualizzazioni=visualizzazioni+1 WHERE id=:id");
         $stm->bindParam(":id", $id);
@@ -176,56 +110,5 @@ class FotografiaMapper
         }else{
             return null;
         }
-    }
-
-    public function getCommenti($fotografia_id){
-        $stm = $this->db->prepare("SELECT * FROM commenta WHERE fotografia_id=:fotografia_id ORDER BY id DESC");
-        $stm->bindParam(":fotografia_id", $fotografia_id);
-        $stm->execute();
-        $result = $stm->fetchAll();
-        if($result){
-            $data = array();
-            $utenteMapper = new UtenteMapper();
-            foreach($result as $commento){
-                $utente = $utenteMapper->getById($commento["utente_id"]);
-                $data[] = array($utente->getNome() . " " . $utente->getCognome(), $commento["contenuto"], $commento["utente_id"], $commento["id"]);
-            }
-            return $data;
-        }else{
-            return null;
-        }
-    }
-
-    public function getCommentoById($id){
-        $stm = $this->db->prepare("SELECT * FROM commenta WHERE id=:id LIMIT 1");
-        $stm->bindParam(":id", $id);
-        $stm->execute();
-        $result = $stm->fetchAll();
-        if($result){
-            return array("id" => $result[0]["id"], "fotografia_id" => $result[0]["fotografia_id"], "utente_id" => $result[0]["utente_id"], "contenuto" => $result[0]["contenuto"]);
-        }else{
-            return null;
-        }
-    }
-
-    public function insertCommento($fotografia_id, $utente_id, $contenuto){
-        $stm = $this->db->prepare("INSERT INTO commenta(fotografia_id, utente_id, contenuto) VALUES(:fotografia_id, :utente_id, :contenuto)");
-        $stm->bindParam(":fotografia_id", $fotografia_id);
-        $stm->bindParam(":utente_id", $utente_id);
-        $stm->bindParam(":contenuto", $contenuto);
-        $stm->execute();
-    }
-
-    public function deleteCommento($id){
-        $stm = $this->db->prepare("DELETE FROM commenta WHERE id=:id");
-        $stm->bindParam(":id", $id);
-        $stm->execute();
-    }
-
-    public function updateCommento($id, $contenuto){
-        $stm = $this->db->prepare("UPDATE commenta SET contenuto=:contenuto WHERE id=:id");
-        $stm->bindParam(":id", $id);
-        $stm->bindParam(":contenuto", $contenuto);
-        $stm->execute();
     }
 }

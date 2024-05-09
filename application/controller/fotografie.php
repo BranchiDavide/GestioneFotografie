@@ -10,17 +10,20 @@ class fotografie
         try{
             $id = Sanitizer::sanitize($id);
             $fotografiaMapper = new FotografiaMapper();
+            $valutazioneMapper = new ValutazioneMapper();
+            $commentoMapper = new CommentoMapper();
             $fotografia = $fotografiaMapper->getById($id);
             if(!$fotografia){
                 Twig::render("_templates/errorPage.twig", ["errorMsg" => "Fotografia non trovata!"]);
                 return;
             }
             $fotografia = $fotografiaMapper->changeIdUtenteToName($fotografia);
-            $score =  $fotografiaMapper->getScore($id);
-            $valutazioni = $fotografiaMapper->getAllValutazioni($id);
+            $score =  $valutazioneMapper->getScore($id);
+            $valutazioni = $valutazioneMapper->getAll($id);
+            $valutazioni = $valutazioneMapper->changeIdUtenteToName($valutazioni);
             $valutazionePresente = null;
             if(Session::hasSessionType()){
-                $valutazionePresente = $fotografiaMapper->getValutazioneByUserId($id, $_SESSION["utente-id"]);
+                $valutazionePresente = $valutazioneMapper->getValutazioneByUserId($id, $_SESSION["utente-id"]);
             }
             $photosSeen = $_SESSION["photos-seen"];
             if(!in_array($id, $photosSeen)){
@@ -28,8 +31,9 @@ class fotografie
                 $_SESSION["photos-seen"] = $photosSeen;
                 $fotografiaMapper->incrementViews($id);
             }
-            $commenti = $fotografiaMapper->getCommenti($id);
-            Twig::render("fotografie/dettagli.twig", ["fotografia" => $fotografia, "score" => $score, "valutazioni" => $valutazioni, "valutazionePresente" => $valutazionePresente, "commenti" => $commenti]);
+            $commenti = $commentoMapper->getAllOfPhoto($id);
+            $commentiWithNome = $commentoMapper->changeIdUtenteToName($commentoMapper->getAllOfPhoto($id));
+            Twig::render("fotografie/dettagli.twig", ["fotografia" => $fotografia, "score" => $score, "valutazioni" => $valutazioni, "valutazionePresente" => $valutazionePresente, "commenti" => $commenti, "commentiWithNome" => $commentiWithNome]);
             unset($_SESSION['showSuccessMsg']);
         }catch (Exception $e){
             Twig::render("_templates/errorPage.twig", ["errorMsg" => "Fotografia non trovata!"]);
@@ -40,6 +44,7 @@ class fotografie
         if(Session::hasSessionType()){
             if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $fotografiaMapper = new FotografiaMapper();
+                $valutazioneMapper = new ValutazioneMapper();
                 header("Content-Type: application/json; charset=UTF-8");
                 $json = file_get_contents('php://input');
                 $data = json_decode($json, true);
@@ -54,7 +59,7 @@ class fotografie
                     }
                     if($action == "insert"){
                         if($stelle > 0 && $stelle <= 5){
-                            $fotografiaMapper->insertValutazione($foto_id, $_SESSION["utente-id"], $stelle);
+                            $valutazioneMapper->insertValutazione($foto_id, $_SESSION["utente-id"], $stelle);
                             $response = array("status" => "SUCCESS");
                             echo json_encode($response);
                         }else{
@@ -63,12 +68,12 @@ class fotografie
                         }
                     }else{
                         if($stelle == 0){
-                            $fotografiaMapper->deleteValutazione($foto_id, $_SESSION["utente-id"]);
+                            $valutazioneMapper->deleteValutazione($foto_id, $_SESSION["utente-id"]);
                             $response = array("status" => "SUCCESS");
                             echo json_encode($response);
                         }else{
                             if($stelle > 0 && $stelle <= 5){
-                                $fotografiaMapper->updateValutazione($foto_id, $_SESSION["utente-id"], $stelle);
+                                $valutazioneMapper->updateValutazione($foto_id, $_SESSION["utente-id"], $stelle);
                                 $response = array("status" => "SUCCESS");
                                 echo json_encode($response);
                             }else{
@@ -98,6 +103,7 @@ class fotografie
                     $id = Sanitizer::sanitize($id);
                     $contenuto = Sanitizer::sanitize($_POST["contenuto"]);
                     $fotografiaMapper = new FotografiaMapper();
+                    $commentoMapper = new CommentoMapper();
                     $fotografia = $fotografiaMapper->getById($id);
                     if(!$fotografia){
                         Twig::render("_templates/errorPage.twig", ["errorMsg" => "Fotografia non trovata!"]);
@@ -107,7 +113,7 @@ class fotografie
                         Twig::render("_templates/errorPage.twig", ["errorMsg" => "Errore, caratteri commento non validi!"]);
                         return;
                     }
-                    $fotografiaMapper->insertCommento($id, $_SESSION["utente-id"], $contenuto);
+                    $commentoMapper->insert($id, $_SESSION["utente-id"], $contenuto);
                     $_SESSION["showSuccessMsg"] = "Commento aggiunto con successo!";
                     header("Location: " . URL . "fotografie/dettagli/" . $id . "#comments");
                 }catch (Exception $e){
@@ -120,24 +126,24 @@ class fotografie
     public function eliminacommento(){
         if(Session::hasSessionType()){
             if($_SERVER["REQUEST_METHOD"] == "POST"){
-                $fotografiaMapper = new FotografiaMapper();
+                $commentoMapper = new CommentoMapper();
                 header("Content-Type: application/json; charset=UTF-8");
                 $json = file_get_contents('php://input');
                 $data = json_decode($json, true);
                 try{
                     $id = Sanitizer::sanitize($data["id"]);
-                    $commento = $fotografiaMapper->getCommentoById($id);
+                    $commento = $commentoMapper->getById($id);
                     if(!$commento){// Il commento non esiste
                         $response = array("status" => "FAILED");
                         echo json_encode($response);
                         return;
                     }
-                    if($commento["utente_id"] != $_SESSION["utente-id"]){ //Un utente prova ad eliminare un commento che non è suo
+                    if($commento->getUtenteId()!= $_SESSION["utente-id"]){ //Un utente prova ad eliminare un commento che non è suo
                         $response = array("status" => "FAILED");
                         echo json_encode($response);
                         return;
                     }
-                    $fotografiaMapper->deleteCommento($id);
+                    $commentoMapper->delete($id);
                     $response = array("status" => "SUCCESS");
                     echo json_encode($response);
                 }catch(Exception $ex){
@@ -157,25 +163,25 @@ class fotografie
     public function modificacommento(){
         if(Session::hasSessionType()){
             if($_SERVER["REQUEST_METHOD"] == "POST"){
-                $fotografiaMapper = new FotografiaMapper();
+                $commentoMapper = new CommentoMapper();
                 header("Content-Type: application/json; charset=UTF-8");
                 $json = file_get_contents('php://input');
                 $data = json_decode($json, true);
                 try{
                     $id = Sanitizer::sanitize($data["id"]);
                     $contenuto = Sanitizer::sanitize($data["contenuto"]);
-                    $commento = $fotografiaMapper->getCommentoById($id);
+                    $commento = $commentoMapper->getById($id);
                     if(!$commento){// Il commento non esiste
                         $response = array("status" => "FAILED");
                         echo json_encode($response);
                         return;
                     }
-                    if($commento["utente_id"] != $_SESSION["utente-id"]){ //Un utente prova a modificare un commento che non è suo
+                    if($commento->getUtenteId() != $_SESSION["utente-id"]){ //Un utente prova a modificare un commento che non è suo
                         $response = array("status" => "FAILED");
                         echo json_encode($response);
                         return;
                     }
-                    $fotografiaMapper->updateCommento($id, $contenuto);
+                    $commentoMapper->update($id, $contenuto);
                     $response = array("status" => "SUCCESS");
                     echo json_encode($response);
                 }catch(Exception $ex){

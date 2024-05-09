@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Application' => $baseDir . '/application/libs/application.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+    'Commento' => $baseDir . '/application/models/Commento.php',
+    'CommentoMapper' => $baseDir . '/application/models/mappers/CommentoMapper.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Database' => $baseDir . '/application/libs/Database.php',
     'DateError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
@@ -1270,4 +1272,6 @@ return array(
     'Utente' => $baseDir . '/application/models/Utente.php',
     'UtenteMapper' => $baseDir . '/application/models/mappers/UtenteMapper.php',
     'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
+    'Valutazione' => $baseDir . '/application/models/Valutazione.php',
+    'ValutazioneMapper' => $baseDir . '/application/models/mappers/ValutazioneMapper.php',
 );

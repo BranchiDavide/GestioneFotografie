@@ -188,9 +188,21 @@ class FotografiaMapper
             $utenteMapper = new UtenteMapper();
             foreach($result as $commento){
                 $utente = $utenteMapper->getById($commento["utente_id"]);
-                $data[] = array($utente->getNome() . " " . $utente->getCognome(), $commento["contenuto"]);
+                $data[] = array($utente->getNome() . " " . $utente->getCognome(), $commento["contenuto"], $commento["utente_id"], $commento["id"]);
             }
             return $data;
+        }else{
+            return null;
+        }
+    }
+
+    public function getCommentoById($id){
+        $stm = $this->db->prepare("SELECT * FROM commenta WHERE id=:id LIMIT 1");
+        $stm->bindParam(":id", $id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        if($result){
+            return array("id" => $result[0]["id"], "fotografia_id" => $result[0]["fotografia_id"], "utente_id" => $result[0]["utente_id"], "contenuto" => $result[0]["contenuto"]);
         }else{
             return null;
         }
@@ -200,6 +212,19 @@ class FotografiaMapper
         $stm = $this->db->prepare("INSERT INTO commenta(fotografia_id, utente_id, contenuto) VALUES(:fotografia_id, :utente_id, :contenuto)");
         $stm->bindParam(":fotografia_id", $fotografia_id);
         $stm->bindParam(":utente_id", $utente_id);
+        $stm->bindParam(":contenuto", $contenuto);
+        $stm->execute();
+    }
+
+    public function deleteCommento($id){
+        $stm = $this->db->prepare("DELETE FROM commenta WHERE id=:id");
+        $stm->bindParam(":id", $id);
+        $stm->execute();
+    }
+
+    public function updateCommento($id, $contenuto){
+        $stm = $this->db->prepare("UPDATE commenta SET contenuto=:contenuto WHERE id=:id");
+        $stm->bindParam(":id", $id);
         $stm->bindParam(":contenuto", $contenuto);
         $stm->execute();
     }

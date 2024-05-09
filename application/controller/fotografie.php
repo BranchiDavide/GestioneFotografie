@@ -47,6 +47,11 @@ class fotografie
                     $foto_id = Sanitizer::sanitize($data["foto_id"]);
                     $stelle = Sanitizer::sanitize($data["stelle"]);
                     $action = Sanitizer::sanitize($data["action"]);
+                    if(!$fotografiaMapper->getById($foto_id)){ //La foto non esiste
+                        $response = array("status" => "FAILED");
+                        echo json_encode($response);
+                        return;
+                    }
                     if($action == "insert"){
                         if($stelle > 0 && $stelle <= 5){
                             $fotografiaMapper->insertValutazione($foto_id, $_SESSION["utente-id"], $stelle);
@@ -73,10 +78,16 @@ class fotografie
                         }
                     }
                 }catch(Exception $ex){
-                    $response = array("status" => "FAILED", "ex" => $ex->getMessage());
+                    $response = array("status" => "FAILED");
                     echo json_encode($response);
                 }
+            }else{
+                $response = array("status" => "FAILED");
+                echo json_encode($response);
             }
+        }else{
+            $response = array("status" => "FAILED");
+            echo json_encode($response);
         }
     }
 
@@ -103,6 +114,81 @@ class fotografie
                     Twig::render("_templates/errorPage.twig", ["errorMsg" => "Errore nell'inserimento del commento!"]);
                 }
             }
+        }
+    }
+
+    public function eliminacommento(){
+        if(Session::hasSessionType()){
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $fotografiaMapper = new FotografiaMapper();
+                header("Content-Type: application/json; charset=UTF-8");
+                $json = file_get_contents('php://input');
+                $data = json_decode($json, true);
+                try{
+                    $id = Sanitizer::sanitize($data["id"]);
+                    $commento = $fotografiaMapper->getCommentoById($id);
+                    if(!$commento){// Il commento non esiste
+                        $response = array("status" => "FAILED");
+                        echo json_encode($response);
+                        return;
+                    }
+                    if($commento["utente_id"] != $_SESSION["utente-id"]){ //Un utente prova ad eliminare un commento che non è suo
+                        $response = array("status" => "FAILED");
+                        echo json_encode($response);
+                        return;
+                    }
+                    $fotografiaMapper->deleteCommento($id);
+                    $response = array("status" => "SUCCESS");
+                    echo json_encode($response);
+                }catch(Exception $ex){
+                    $response = array("status" => "FAILED");
+                    echo json_encode($response);
+                }
+            }else{
+                $response = array("status" => "FAILED");
+                echo json_encode($response);
+            }
+        }else{
+            $response = array("status" => "FAILED");
+            echo json_encode($response);
+        }
+    }
+
+    public function modificacommento(){
+        if(Session::hasSessionType()){
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $fotografiaMapper = new FotografiaMapper();
+                header("Content-Type: application/json; charset=UTF-8");
+                $json = file_get_contents('php://input');
+                $data = json_decode($json, true);
+                try{
+                    $id = Sanitizer::sanitize($data["id"]);
+                    $contenuto = Sanitizer::sanitize($data["contenuto"]);
+                    $commento = $fotografiaMapper->getCommentoById($id);
+                    if(!$commento){// Il commento non esiste
+                        $response = array("status" => "FAILED");
+                        echo json_encode($response);
+                        return;
+                    }
+                    if($commento["utente_id"] != $_SESSION["utente-id"]){ //Un utente prova a modificare un commento che non è suo
+                        $response = array("status" => "FAILED");
+                        echo json_encode($response);
+                        return;
+                    }
+                    $fotografiaMapper->updateCommento($id, $contenuto);
+                    $response = array("status" => "SUCCESS");
+                    echo json_encode($response);
+                }catch(Exception $ex){
+                    $response = array("status" => "FAILED");
+                    echo json_encode($response);
+                }
+            }else{
+                $response = array("status" => "FAILED");
+                echo json_encode($response);
+            }
+        }else{
+            $response = array("status" => "FAILED");
+            echo json_encode($response);
         }
     }
 }

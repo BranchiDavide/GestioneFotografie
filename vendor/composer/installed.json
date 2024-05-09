@@ -136,6 +136,48 @@
             "install-path": "../carbonphp/carbon-doctrine-types"
         },
         {
+            "name": "components/font-awesome",
+            "version": "6.5.2",
+            "version_normalized": "6.5.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/font-awesome.git",
+                "reference": "399200378d29bacb524c0e19318ea5ff5d74aa7f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/399200378d29bacb524c0e19318ea5ff5d74aa7f",
+                "reference": "399200378d29bacb524c0e19318ea5ff5d74aa7f",
+                "shasum": ""
+            },
+            "time": "2024-04-08T15:15:22+00:00",
+            "type": "component",
+            "extra": {
+                "component": {
+                    "styles": [
+                        "css/all.css"
+                    ],
+                    "files": [
+                        "css/all.min.css",
+                        "webfonts/*"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC-BY-4.0",
+                "MIT",
+                "OFL-1.1"
+            ],
+            "description": "Font Awesome, the iconic SVG, font, and CSS framework.",
+            "support": {
+                "issues": "https://github.com/components/font-awesome/issues",
+                "source": "https://github.com/components/font-awesome/tree/6.5.2"
+            },
+            "install-path": "../components/font-awesome"
+        },
+        {
             "name": "dflydev/dot-access-data",
             "version": "v3.0.2",
             "version_normalized": "3.0.2.0",

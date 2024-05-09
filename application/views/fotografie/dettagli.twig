@@ -1,5 +1,10 @@
 {% include '_templates/header.twig' %}
 
+<style>
+    .fa-solid:hover{
+        cursor: pointer;
+    }
+</style>
 <br>
 <br>
 <div class="container col-12">
@@ -86,6 +91,10 @@
             <hr>
             {% if commenti %}
                 {% for commento in commenti %}
+                    {% if commento[2] == session['utente-id'] %}
+                        <i data-commentId="{{ commento[3] }}" class="fa-solid fa-trash me-2 deleteCommentIcon"></i>
+                        <i data-commentId="{{ commento[3] }}" class="fa-solid fa-pen-to-square me-2 editCommentIcon"></i>
+                    {% endif %}
                     <strong>{{ commento[0] }}:</strong>
                     <p>{{ commento[1]|nl2br }}</p>
                 {% endfor %}
@@ -118,5 +127,6 @@
     </div>
 </div>
 <script src="{{ URL }}public/js/valutazioniManager.js"></script>
+<script src="{{ URL }}public/js/commentiManager.js"></script>
 
 {% include '_templates/footer.twig' %}

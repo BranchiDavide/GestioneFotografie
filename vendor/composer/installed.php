@@ -3,7 +3,7 @@
         'name' => 'davide.branchi/gestione-fotografie',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '07b3afccfa5a2192b4998f948dc43b4707b204f4',
+        'reference' => '889874ce7b224bc0377916b34057c5f07243872d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -28,10 +28,19 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'components/font-awesome' => array(
+            'pretty_version' => '6.5.2',
+            'version' => '6.5.2.0',
+            'reference' => '399200378d29bacb524c0e19318ea5ff5d74aa7f',
+            'type' => 'component',
+            'install_path' => __DIR__ . '/../components/font-awesome',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'davide.branchi/gestione-fotografie' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '07b3afccfa5a2192b4998f948dc43b4707b204f4',
+            'reference' => '889874ce7b224bc0377916b34057c5f07243872d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -658,8 +667,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '3.0.0',
+                0 => '3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache' => array(

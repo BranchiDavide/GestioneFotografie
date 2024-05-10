@@ -27,9 +27,9 @@
         object-fit: cover;
     }
 
-    .col-md-4 {
+    .col-md-3 {
         margin-top: 15px;
-        margin-right: -10px;
+        margin-right: 10px;
     }
 </style>
 <br>
@@ -82,9 +82,9 @@
 <br>
 {% if fotografie %}
     <div class="container col-md-8 col-sm-12">
-        <div class="row justify-content-between">
+        <div class="row justify-content-center">
             {% for foto in fotografie %}
-                    <div class="card col-md-4 col-sm-12">
+                    <div class="card col-md-3 col-sm-12">
                         <a href="{{ URL }}fotografie/dettagli/{{ foto.id }}" class="text-decoration-none">
                             <img class="card-img-top" src="{{ URL }}{{ foto.path }}" alt="Card image cap">
                             <ul class="list-group list-group-flush">

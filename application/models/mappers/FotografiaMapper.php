@@ -76,7 +76,11 @@ class FotografiaMapper
         $result = $stm->fetchAll();
         $data = array();
         if($result){
+            $utenteMapper = new UtenteMapper();
             foreach($result as $fotografia){
+                $utente_id = $fotografia["utente_id"];
+                $utente = $utenteMapper->getById($utente_id);
+                $fotografia["utente_id"] = $utente->getNome() . " " . $utente->getCognome();
                 $data[] = array(
                     new Fotografia($fotografia["id"], $fotografia["path"], $fotografia["data_ora"], $fotografia["luogo"], $fotografia["soggetto"], $fotografia["tipologia"], $fotografia["visualizzazioni"], $fotografia["utente_id"]),
                     $fotografia["score"]
@@ -86,6 +90,17 @@ class FotografiaMapper
         }else{
             return null;
         }
+    }
+
+    public function getClassificaByVisualizzazioni(){
+        $stm = $this->db->prepare("SELECT * FROM fotografia ORDER BY visualizzazioni DESC");
+        $stm->execute();
+        $result = $stm->fetchAll();
+        $fotografie = array();
+        foreach($result as $fotografia){
+            $fotografie[] = new Fotografia($fotografia["id"], $fotografia["path"], $fotografia["data_ora"], $fotografia["luogo"], $fotografia["soggetto"], $fotografia["tipologia"], $fotografia["visualizzazioni"], $fotografia["utente_id"]);
+        }
+        return $fotografie;
     }
 
     public function getClassifica3Best(){

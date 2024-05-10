@@ -1,0 +1,61 @@
+{% include '_templates/header.twig' %}
+
+<br>
+<h1 align="center">Classifica delle migliori fotografie</h1>
+<br>
+<div class="col-md-8 col-sm-12 mx-auto shadow p-3 mb-5 bg-white rounded">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Punteggio</th>
+            <th scope="col">Luogo</th>
+            <th scope="col">Data</th>
+            <th scope="col">Visualizzazioni</th>
+            <th scope="col">Autore</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for fotografia in fotografie %}
+                <tr>
+                    <td>{{ fotografia[1] }}</td>
+                    <td>{{ fotografia[0].luogo }}</td>
+                    <td>{{ fotografia[0].getDataOra }}</td>
+                    <td>{{ fotografia[0].visualizzazioni }}</td>
+                    <td>{{ fotografia[0].getUtenteId }}</td>
+                    <td><a class="btn btn-primary" href="{{ URL }}fotografie/dettagli/{{ fotografia[0].id }}">Mostra dettagli</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<br>
+<h1 align="center">Classifica delle fotografie più viste</h1>
+<br>
+<div class="col-md-8 col-sm-12 mx-auto shadow p-3 mb-5 bg-white rounded">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Visualizzazioni</th>
+            <th scope="col">Luogo</th>
+            <th scope="col">Data</th>
+            <th scope="col">Autore</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for fotografia in fotografieVisualizzazioni %}
+            <tr>
+                <td>{{ fotografia.visualizzazioni }}</td>
+                <td>{{ fotografia.luogo }}</td>
+                <td>{{ fotografia.getDataOra }}</td>
+                <td>{{ fotografia.getUtenteId }}</td>
+                <td><a class="btn btn-primary" href="{{ URL }}fotografie/dettagli/{{ fotografia.id }}">Mostra dettagli</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% include '_templates/footer.twig' %}

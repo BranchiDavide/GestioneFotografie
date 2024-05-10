@@ -126,4 +126,52 @@ class FotografiaMapper
             return null;
         }
     }
+
+    public function search($filters, $value){
+        $selectSql = "SELECT fotografia.*, utente.nome, utente.cognome FROM fotografia INNER JOIN utente ON fotografia.utente_id=utente.id WHERE ";
+        $whereSql = array();
+        $joinSql = " INNER JOIN utente ON fotografia.utente_id=utente.id";
+        for($i = 0; $i < count($filters); $i++){
+            if($filters[$i] == "nome_fotografo"){
+                $filters[$i] = "utente.nome";
+            }
+            if($filters[$i] == "cognome_fotografo"){
+                $filters[$i] = "utente.cognome";
+            }
+            if($i == count($filters) - 1){ //Ultimo elemento, non server OR
+                $whereSql[] = $filters[$i] . " LIKE :value";
+            }else{
+                $whereSql[] = $filters[$i] . " LIKE :value OR";
+            }
+        }
+        $fullQuery = $selectSql . implode(" ", $whereSql);
+
+        $stm = $this->db->prepare($fullQuery);
+        $value = '%' . $value . '%';
+        $stm->bindParam(":value", $value);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        $fotografie = array();
+        foreach($result as $fotografia){
+            $fotografie[] = new Fotografia($fotografia["id"], $fotografia["path"], $fotografia["data_ora"], $fotografia["luogo"], $fotografia["soggetto"], $fotografia["tipologia"], $fotografia["visualizzazioni"], $fotografia["utente_id"]);
+        }
+        return $fotografie;
+    }
+
+    public function convertFotografieArrayToJson($array){
+        $data = array();
+        foreach($array as $item){
+            $data[] = array(
+                "id" => $item->getId(),
+                "path" => $item->getPath(),
+                "data_ora" => $item->getDataOra(),
+                "luogo" => $item->getLuogo(),
+                "soggetto" => $item->getSoggetto(),
+                "tipologia" => $item->getTipologia(),
+                "visualizzazioni" => $item->getVisualizzazioni(),
+                "utente_id" => $item->getUtenteId()
+            );
+        }
+        return $data;
+    }
 }

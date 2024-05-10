@@ -100,9 +100,11 @@ function countStars(){
     }
 }
 
-document.getElementById("resetStarsBtn").addEventListener("click" , () => {
-   resetStars();
-});
+if(document.getElementById("resetStarsBtn")){
+    document.getElementById("resetStarsBtn").addEventListener("click" , () => {
+        resetStars();
+    });
+}
 
 window.onload = () => {
     countStars();

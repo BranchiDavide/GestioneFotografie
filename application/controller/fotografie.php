@@ -119,7 +119,13 @@ class fotografie
                 }catch (Exception $e){
                     Twig::render("_templates/errorPage.twig", ["errorMsg" => "Errore nell'inserimento del commento!"]);
                 }
+            }else{
+                $response = array("status" => "FAILED");
+                echo json_encode($response);
             }
+        }else{
+            $response = array("status" => "FAILED");
+            echo json_encode($response);
         }
     }
 
@@ -191,6 +197,47 @@ class fotografie
             }else{
                 $response = array("status" => "FAILED");
                 echo json_encode($response);
+            }
+        }else{
+            $response = array("status" => "FAILED");
+            echo json_encode($response);
+        }
+    }
+
+    public function search(){
+        if($_SERVER["REQUEST_METHOD"] == "POST"){
+            $fotografiaMapper = new FotografiaMapper();
+            header("Content-Type: application/json; charset=UTF-8");
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+            if(!$data["value"]){
+                $fotografie = $fotografiaMapper->getAll();
+                $fotografie = $fotografiaMapper->convertFotografieArrayToJson($fotografie);
+                $response = array("status" => "SUCCESS", "data" => $fotografie);
+                echo json_encode($response);
+            }else{
+                try{
+                    $value = Sanitizer::sanitize($data["value"]);
+                    Sanitizer::isSetted($data["filters"]);
+                    $allowedFilters = array("data_ora", "luogo", "soggetto", "tipologia", "visualizzazioni", "nome_fotografo", "cognome_fotografo");
+                    $sanitizedFilters = array();
+                    foreach($data["filters"] as $filter){
+                        $filter = Sanitizer::sanitize($filter);
+                        if(!in_array($filter, $allowedFilters)){ //Campo per la ricerca non valido
+                            $response = array("status" => "FAILED");
+                            echo json_encode($response);
+                            return;
+                        }
+                        $sanitizedFilters[] = $filter;
+                    }
+                    $fotografie = $fotografiaMapper->search($sanitizedFilters, $value);
+                    $fotografie = $fotografiaMapper->convertFotografieArrayToJson($fotografie);
+                    $response = array("status" => "SUCCESS", "data" => $fotografie);
+                    echo json_encode($response);
+                }catch(Exception $ex){
+                    $response = array("status" => "FAILED");
+                    echo json_encode($response);
+                }
             }
         }else{
             $response = array("status" => "FAILED");

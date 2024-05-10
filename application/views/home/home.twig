@@ -1,4 +1,5 @@
 {% include '_templates/header.twig' %}
+
 <style>
     .carousel {
         height: 70vh;
@@ -80,9 +81,64 @@
 <br>
 <h1 class="title" align="center">Catalogo fotografico</h1>
 <br>
+<div class="row col-md-5 col-sm-12 mx-auto">
+    <div class="input-group mb-3">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+        <input type="text" id="searchInput" class="form-control" placeholder="Cerca...">
+        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#filterModal"><i class="fas fa-filter"></i> Filtri</button>
+    </div>
+</div>
+
+<!-- Filter Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterModalLabel">Seleziona filtri</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="filterForm">
+                    <div class="form-check">
+                        <input class="form-check-input" checked type="checkbox" name="fields[]" value="data_ora">
+                        <label class="form-check-label">Data e ora</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" checked type="checkbox" name="fields[]" value="luogo">
+                        <label class="form-check-label">Luogo</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" checked type="checkbox" name="fields[]" value="soggetto">
+                        <label class="form-check-label">Soggetto</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" checked type="checkbox" name="fields[]" value="tipologia">
+                        <label class="form-check-label">Tipologia (b/n o colori)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" checked type="checkbox" name="fields[]" value="visualizzazioni">
+                        <label class="form-check-label">Visualizzazioni</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" checked type="checkbox" name="fields[]" value="nome_fotografo">
+                        <label class="form-check-label">Nome fotografo</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" checked type="checkbox" name="fields[]" value="cognome_fotografo" >
+                        <label class="form-check-label">Cognome fotografo</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Applica filtri</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% if fotografie %}
     <div class="container col-md-8 col-sm-12">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center catalogoDiv">
             {% for foto in fotografie %}
                     <div class="card col-md-3 col-sm-12">
                         <a href="{{ URL }}fotografie/dettagli/{{ foto.id }}" class="text-decoration-none">
@@ -99,5 +155,7 @@
 {% else %}
     <p align="center">Non sono disponibili fotografie al momento!</p>
 {% endif %}
+
+<script src="{{ URL }}public/js/search.js"></script>
 
 {% include '_templates/footer.twig' %}

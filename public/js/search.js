@@ -2,23 +2,30 @@ const searchInput = document.getElementById("searchInput");
 const catalogoDiv = document.getElementsByClassName("catalogoDiv")[0];
 
 searchInput.addEventListener("keyup", async() => {
-    const data = {
-        "filters": getFilterData(),
-        "value": searchInput.value.trim()
-    };
-    let response = await fetch(URL + "fotografie/search", {
-        method: "POST",
-        headers: {
-            "Content-Type":"application/json"
-        },
-        body: JSON.stringify(data)
-    });
-    let json = await response.json();
-    if(json.status == "SUCCESS"){
-        loadCatalogo(json);
+    if(getFilterData().length > 0){
+        const data = {
+            "filters": getFilterData(),
+            "value": searchInput.value.trim()
+        };
+        let response = await fetch(URL + "fotografie/search", {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(data)
+        });
+        let json = await response.json();
+        if(json.status == "SUCCESS"){
+            loadCatalogo(json);
+        }else{
+            Swal.fire({
+                title: "Errore nella ricerca!",
+                icon: "error"
+            });
+        }
     }else{
         Swal.fire({
-            title: "Errore nella ricerca!",
+            title: "Impossibile effettuare la ricerca senza filtri!",
             icon: "error"
         });
     }
@@ -49,6 +56,9 @@ function loadCatalogo(json){
         </div>
         `;
         out += html;
+    }
+    if(out.length == 0){
+        out += `<p align="center">Nessuna fotografia trovata!</p>`;
     }
     catalogoDiv.innerHTML = out;
 }

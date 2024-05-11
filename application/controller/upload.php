@@ -6,6 +6,12 @@ class upload
     public function index(){
         if(Session::hasSessionType()){
             if(Session::isFotografo()){
+                $fotografiaMapper = new FotografiaMapper();
+                $userPhotosCount = $fotografiaMapper->getNumberOfUserPhotos($_SESSION["utente-id"]);
+                if($userPhotosCount >= 5){
+                    Twig::render("_templates/errorPage.twig", ["errorMsg" => "Hai raggiunto il limite massimo di 5 fotografie!"]);
+                    return;
+                }
                 if($_SERVER["REQUEST_METHOD"] == "POST"){
                     try{
                         $dataOra = Sanitizer::sanitize($_POST["data-ora"]);
@@ -44,7 +50,6 @@ class upload
                         $filePath = "public/datastore/" . $uuid . "." . $fileExt;
                         move_uploaded_file($fileTmpName, $filePath);
 
-                        $fotografiaMapper = new FotografiaMapper();
                         $fotografiaMapper->insert($filePath, $dataOra, $luogo, $soggetto, $tipologia, 0, $_SESSION["utente-id"]);
 
                         Twig::render("_templates/successPage.twig", ["successMsg" => "Fotografia caricata con successo!"]);

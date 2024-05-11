@@ -1,0 +1,30 @@
+{% include '_templates/header.twig' %}
+
+<br>
+<br>
+<br>
+<br>
+<div class="container col-12">
+    <h1 align="center">Il mio profilo</h1>
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
+        <form>
+            <label>Nome</label>
+            <input type="text" class="form-control" value="{{ utente.nome }}" disabled>
+            <br>
+            <label>Cognome</label>
+            <input type="text" class="form-control" value="{{ utente.cognome }}" disabled>
+            <br>
+            <label>Email</label>
+            <input type="text" class="form-control" value="{{ utente.email }}" disabled>
+            <br>
+            <label>Data di nascita</label>
+            <input type="text" class="form-control" value="{{ utente.getDataNascita }}" disabled>
+            <br>
+            <label>Tipo di account</label>
+            <input type="text" class="form-control" value="{{ utente.getRuoloNome }}" disabled>
+            <br>
+        </form>
+    </div>
+</div>
+
+{% include '_templates/footer.twig' %}

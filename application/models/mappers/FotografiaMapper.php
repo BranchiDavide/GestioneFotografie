@@ -31,6 +31,18 @@ class FotografiaMapper
         }
     }
 
+    public function getFotografieOfUtente($utente_id){
+        $stm = $this->db->prepare("SELECT * FROM fotografia WHERE utente_id=:utente_id");
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        $fotografie = array();
+        foreach($result as $fotografia){
+            $fotografie[] = new Fotografia($fotografia["id"], $fotografia["path"], $fotografia["data_ora"], $fotografia["luogo"], $fotografia["soggetto"], $fotografia["tipologia"], $fotografia["visualizzazioni"], $fotografia["utente_id"]);
+        }
+        return $fotografie;
+    }
+
     public function insert($path, $data_ora, $luogo, $soggetto, $tipologia, $visualizzazioni, $utente_id){
         $stm = $this->db->prepare("INSERT INTO fotografia (path, data_ora, luogo, soggetto, tipologia, visualizzazioni, utente_id) VALUES(:path, :data_ora, :luogo, :soggetto, :tipologia, :visualizzazioni, :utente_id)");
         $stm->bindValue(':path', $path);
@@ -172,6 +184,72 @@ class FotografiaMapper
                 "utente_id" => $item->getUtenteId()
             );
         }
+        return $data;
+    }
+
+    public function getNumberOfUserPhotos($utente_id){
+        $stm = $this->db->prepare("SELECT COUNT(*) AS 'count' FROM fotografia WHERE utente_id=:utente_id");
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        if($result){
+            return $result[0]["count"];
+        }else{
+            return null;
+        }
+    }
+
+    public function getMostRatedPhotosChartJsFormat($utente_id){
+        $stm = $this->db->prepare("
+            SELECT id, luogo,
+            CONCAT(YEAR(data_ora),'-',LPAD(MONTH(data_ora), 2, '0'),'-',LPAD(DAY(data_ora), 2, '0')) AS 'data_ora',
+            fotografia.utente_id, AVG(stelle) AS 'score'
+            FROM fotografia
+            INNER JOIN valuta ON fotografia_id=fotografia.id
+            WHERE fotografia.utente_id=:utente_id
+            GROUP BY(id)
+            ORDER BY score DESC
+        ");
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        $data = array();
+        $xValues = array();
+        $yValues = array();
+        $ids = array();
+        foreach($result as $fotografia){
+            $xValues[] = $fotografia["luogo"] . ", " . $fotografia["data_ora"];
+            $yValues[] = $fotografia["score"];
+            $ids[] = $fotografia["id"];
+        }
+        $data["xValues"] = $xValues;
+        $data["yValues"] = $yValues;
+        $data["ids"] = $ids;
+        return $data;
+    }
+
+    public function getMostViewedPhotosChartJsFormat($utente_id){
+        $stm = $this->db->prepare("
+        SELECT id, luogo, visualizzazioni,
+        CONCAT(YEAR(data_ora),'-',LPAD(MONTH(data_ora), 2, '0'),'-',LPAD(DAY(data_ora), 2, '0')) AS 'data_ora'
+        FROM fotografia
+        WHERE utente_id=:utente_id
+        ORDER BY visualizzazioni DESC");
+        $stm->bindParam(":utente_id", $utente_id);
+        $stm->execute();
+        $result = $stm->fetchAll();
+        $data = array();
+        $xValues = array();
+        $yValues = array();
+        $ids = array();
+        foreach($result as $fotografia){
+            $xValues[] = $fotografia["luogo"] . ", " . $fotografia["data_ora"];
+            $yValues[] = $fotografia["visualizzazioni"];
+            $ids[] = $fotografia["id"];
+        }
+        $data["xValues"] = $xValues;
+        $data["yValues"] = $yValues;
+        $data["ids"] = $ids;
         return $data;
     }
 }

@@ -79,7 +79,7 @@
 <br>
 <br>
 <br>
-<h1 class="title" align="center">Catalogo fotografico</h1>
+<h1 class="title" id="catalogo" align="center">Catalogo fotografico</h1>
 <br>
 <div class="row col-md-5 col-sm-12 mx-auto">
     <div class="input-group mb-3">
@@ -138,8 +138,9 @@
 
 {% if fotografie %}
     <div class="container col-md-8 col-sm-12">
-        <div class="row justify-content-center catalogoDiv">
-            {% for foto in fotografie %}
+        <div class="min-vh-100">
+            <div class="row justify-content-center catalogoDiv">
+                {% for foto in fotografie %}
                     <div class="card col-md-3 col-sm-12">
                         <a href="{{ URL }}fotografie/dettagli/{{ foto.id }}" class="text-decoration-none">
                             <img class="card-img-top" src="{{ URL }}{{ foto.path }}" alt="Card image cap">
@@ -149,7 +150,8 @@
                             </ul>
                         </a>
                     </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% else %}

@@ -1,0 +1,174 @@
+{% include '_templates/header.twig' %}
+
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .col-md-3 {
+        margin-top: 15px;
+        margin-right: 10px;
+    }
+</style>
+<br>
+<br>
+<br>
+<br>
+<div class="container col-12">
+    <h1 align="center">Le mie fotografie</h1>
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
+        {% if fotografie %}
+            <div class="container">
+                <div class="row justify-content-center">
+                    {% for foto in fotografie %}
+                        <div class="card col-md-3 col-sm-12">
+                            <a href="{{ URL }}fotografie/dettagli/{{ foto.id }}" class="text-decoration-none">
+                                <img class="card-img-top" src="{{ URL }}{{ foto.path }}" alt="Card image cap">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Data: </strong>{{ foto.getDataOra }}</li>
+                                    <li class="list-group-item"><strong>Luogo: </strong>{{ foto.luogo }}</li>
+                                </ul>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <p align="center">Non sono disponibili fotografie al momento!</p>
+        {% endif %}
+    </div>
+</div>
+<br>
+<br>
+<br>
+<div class="container col-12">
+    <h1 align="center">Statistiche delle mie fotografie</h1>
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-sm-12">
+        <div class="row col-md-10 col-sm-12">
+            <canvas id="mostRatedChart"></canvas>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded col-sm-12">
+        <div class="row col-md-10 col-sm-12">
+            <canvas id="mostViewedChart"></canvas>
+        </div>
+    </div>
+</div>
+<script src="{{ URL }}public/js/Chart.min.js"></script>
+<script>
+    /*
+    Codice per la generazione dei grafici per le fotografie più votate e con più visualizzazioni
+    I grafici vengono generati con la libreria Chart.js (https://github.com/chartjs/Chart.js)
+     */
+    let xValues_1 = JSON.parse('{{ mostRatedChartJs["xValues"] | json_encode | raw }}');
+    let yValues_1 = JSON.parse('{{ mostRatedChartJs["yValues"] | json_encode | raw }}');
+    let ids_1 = JSON.parse('{{ mostRatedChartJs["ids"] | json_encode | raw }}');
+
+    let xValues_2 = JSON.parse('{{ mostViewedChartJs["xValues"] | json_encode | raw }}');
+    let yValues_2 = JSON.parse('{{ mostViewedChartJs["yValues"] | json_encode | raw }}');
+    let ids_2 = JSON.parse('{{ mostViewedChartJs["ids"] | json_encode | raw }}');
+
+
+    let barColors_1 = ["#3E54FA", "#70ACFA","#74D6F7","#74F7EE","#74F7C2"];
+    let barColors_2 = ["#FFCA4A", "#FAE26E","#FAF472","#DAFC6F","#9BFC6A"];
+
+    new Chart("mostRatedChart", {
+        type: "bar",
+        data: {
+            labels: xValues_1,
+            datasets: [{
+                backgroundColor: barColors_1,
+                data: yValues_1
+            }]
+        },
+        options: {
+            legend: {display: false},
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+                display: true,
+                text: "Fotografie migliori",
+                fontSize: 22
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Luogo e data fotografia",
+                        fontSize: 16
+                    },
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Punteggio",
+                        fontSize: 16
+                    },
+                    ticks: {
+                        suggestedMax: 5.000,
+                        suggestedMin: 0.000
+                    }
+                }]
+            },
+            onClick: function(event, elements) {
+                if (elements.length > 0) {
+                    let index = elements[0]._index;
+                    window.location.href = `{{ URL }}fotografie/dettagli/${ids_1[index]}`;
+                }
+            }
+        }
+    });
+
+    new Chart("mostViewedChart", {
+        type: "bar",
+        data: {
+            labels: xValues_2,
+            datasets: [{
+                backgroundColor: barColors_2,
+                data: yValues_2
+            }]
+        },
+        options: {
+            legend: {display: false},
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+                display: true,
+                text: "Fotografie più visualizzate",
+                fontSize: 22
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Luogo e data fotografia",
+                        fontSize: 16
+                    },
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Visualizzazioni",
+                        fontSize: 16
+                    },
+                    ticks: {
+                        suggestedMin: 0,
+                        stepSize:1
+                    }
+                }]
+            },
+            onClick: function(event, elements) {
+                if (elements.length > 0) {
+                    let index = elements[0]._index;
+                    window.location.href = `{{ URL }}fotografie/dettagli/${ids_2[index]}`;
+                }
+            }
+        }
+    });
+</script>
+
+{% include '_templates/footer.twig' %}

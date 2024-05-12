@@ -36,6 +36,8 @@
                                 {% if session.ruolo == "fotografo" %}
                                     <li><a class="dropdown-item" href="{{ URL }}upload">Carica fotografia</a></li>
                                     <li><a class="dropdown-item" href="{{ URL }}profilo/fotografie">Le mie fotografie</a></li>
+                                    <li><a class="dropdown-item" href="{{ URL }}profilo/fotografie#stats">Statistiche delle mie fotografie</a></li>
+                                    <li><a class="dropdown-item" href="{{ URL }}classifica/highlight/{{ session["utente-id"] }}">Classifica delle mie fotografie</a></li>
                                 {% endif %}
                                 <li><a class="dropdown-item" href="{{ URL }}logout">Logout</a></li>
                             </ul>

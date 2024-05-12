@@ -16,15 +16,17 @@
         </tr>
         </thead>
         <tbody>
+        {% set counter1 = 0 %}
             {% for fotografia in fotografie %}
-                <tr>
+                <tr {% if highlight %} {% if highlight_id == fotografieWithoutNome[counter1][0].getUtenteId %} class="table-primary" {% endif %} {% endif %}>
                     <td>{{ fotografia[1] }}</td>
                     <td>{{ fotografia[0].luogo }}</td>
                     <td class="d-none d-sm-table-cell">{{ fotografia[0].getDataOra }}</td>
                     <td class="d-none d-sm-table-cell">{{ fotografia[0].visualizzazioni }}</td>
-                    <td>{{ fotografia[0].getUtenteId }}</td>
+                    <td><a href="{{ URL }}classifica/highlight/{{ fotografieWithoutNome[counter1][0].getUtenteId }}">{{ fotografia[0].getUtenteId }}</a></td>
                     <td><a class="btn btn-primary" href="{{ URL }}fotografie/dettagli/{{ fotografia[0].id }}">Mostra dettagli</a></td>
                 </tr>
+                {% set counter1 = counter1 + 1 %}
             {% endfor %}
         </tbody>
     </table>
@@ -45,14 +47,16 @@
         </tr>
         </thead>
         <tbody>
+        {% set counter2 = 0 %}
         {% for fotografia in fotografieVisualizzazioni %}
-            <tr>
+            <tr {% if highlight %} {% if highlight_id == fotografieVisualizzazioniWithoutNome[counter2].getUtenteId %} class="table-primary" {% endif %} {% endif %}>
                 <td>{{ fotografia.visualizzazioni }}</td>
                 <td>{{ fotografia.luogo }}</td>
                 <td class="d-none d-sm-table-cell">{{ fotografia.getDataOra }}</td>
-                <td>{{ fotografia.getUtenteId }}</td>
+                <td><a href="{{ URL }}classifica/highlight/{{ fotografieVisualizzazioniWithoutNome[counter2].getUtenteId }}">{{ fotografia.getUtenteId }}</a></td>
                 <td><a class="btn btn-primary" href="{{ URL }}fotografie/dettagli/{{ fotografia.id }}">Mostra dettagli</a></td>
             </tr>
+            {% set counter2 = counter2 + 1 %}
         {% endfor %}
         </tbody>
     </table>

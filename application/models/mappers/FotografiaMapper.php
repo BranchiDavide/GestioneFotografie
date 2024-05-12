@@ -77,7 +77,7 @@ class FotografiaMapper
         $stm->execute();
     }
 
-    public function getClassifica(){
+    public function getClassifica($changeIdUtenteToNome = false){
         $stm = $this->db->prepare("
             SELECT id, path, data_ora, luogo, soggetto, tipologia, visualizzazioni, fotografia.utente_id, AVG(stelle) AS 'score'
             FROM valuta INNER JOIN fotografia ON fotografia.id=fotografia_id
@@ -92,7 +92,9 @@ class FotografiaMapper
             foreach($result as $fotografia){
                 $utente_id = $fotografia["utente_id"];
                 $utente = $utenteMapper->getById($utente_id);
-                $fotografia["utente_id"] = $utente->getNome() . " " . $utente->getCognome();
+                if($changeIdUtenteToNome){
+                    $fotografia["utente_id"] = $utente->getNome() . " " . $utente->getCognome();
+                }
                 $data[] = array(
                     new Fotografia($fotografia["id"], $fotografia["path"], $fotografia["data_ora"], $fotografia["luogo"], $fotografia["soggetto"], $fotografia["tipologia"], $fotografia["visualizzazioni"], $fotografia["utente_id"]),
                     $fotografia["score"]

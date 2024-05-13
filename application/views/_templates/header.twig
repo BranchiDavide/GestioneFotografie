@@ -29,6 +29,11 @@
                         <a class="nav-link" aria-current="page" href="{{ URL }}classifica">Classifica</a>
                     </li>
                     {% if session.ruolo %}
+                        {% if session.ruolo == "amministratore" %}
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="{{ URL }}controlpanel">Pannello di controllo</a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active btn btn-primary" id="navProfiloDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white" aria-current="page" href="{{ URL }}login">Profilo</a>
                             <ul class="dropdown-menu" aria-labelledby="navProfiloDropDown">

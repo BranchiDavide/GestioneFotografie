@@ -1,0 +1,44 @@
+{% include '_templates/header.twig' %}
+
+<br>
+<br>
+<br>
+<br>
+<div class="container col-12">
+    <h1 align="center">Richieste di registrazione</h1>
+    <div class="d-flex align-items-center justify-content-center shadow p-3 mb-5 bg-white rounded">
+        {% if requests %}
+            <table class="table table-striped col-sm-12">
+                <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Cognome</th>
+                    <th scope="col" class="d-none d-sm-table-cell">Email</th>
+                    <th scope="col" class="d-none d-sm-table-cell">Data di nascita</th>
+                    <th scope="col">Ruolo</th>
+                    <th scope="col">Approvare</th>
+                    <th scope="col">Rifiutare</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                        <tr>
+                            <td>{{ request.nome }}</td>
+                            <td>{{ request.cognome }}</td>
+                            <td>{{ request.email }}</td>
+                            <td>{{ request.getDataNascita }}</td>
+                            <td>{{ request.getRuoloNome }}</td>
+                            <td><button class="btn btn-success approveBtn" data-requestId="{{ request.id }}"><i class="fa-solid fa-check"></i></button></td>
+                            <td><button class="btn btn-danger denyBtn" data-requestId="{{ request.id }}"><i class="fa-solid fa-x"></i></button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p align="center">Non ci sono richieste di registrazione al momento!!</p>
+        {% endif %}
+    </div>
+</div>
+<script src="{{ URL }}public/js/controlpanel.js"></script>
+
+{% include '_templates/footer.twig' %}

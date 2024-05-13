@@ -27,10 +27,10 @@ class register
                     Twig::render("register/register.twig", ["errorMessage" => "Email non valida!"]);
                     return;
                 }
-                //Date check not implemented yet
-                /*if(!Sanitizer::validateDate($data_nascita)){
-                    Twig::render("register/register.twig", ["errorMessage" => "Data di nascita non valida!"]);
-                }*/
+                if(!Sanitizer::validateDate($data_nascita)){
+                    Twig::render("register/register.twig", ["errorMessage" => "Data di nascita non valida! Formati accettati: dd.mm.yyyy e dd/mm/yyyy"]);
+                    return;
+                }
                 if($ruolo_nome != "utente" && $ruolo_nome != "fotografo"){
                     Twig::render("register/register.twig", ["errorMessage" => "Ruolo non valido!"]);
                     return;

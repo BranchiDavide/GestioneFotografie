@@ -17,7 +17,8 @@ class Sanitizer
     }
 
     public static function validateDate($date){
-        // Not implemented yet
+        $regex = '/^(0[1-9]|[1-2][0-9]|3[0-1])[.\/](0[1-9]|1[0-2])[.\/]\d{4}$/';
+        return preg_match($regex, $date);
     }
 
     public static function validateEmail($email){

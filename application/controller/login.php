@@ -19,6 +19,7 @@ class login
                 }
                 $_SESSION["ruolo"] = $user->getRuoloNome();
                 $_SESSION["utente-id"] = $user->getId();
+                Session::genCSRFtoken();
                 header("Location: " . URL . "home");
             }catch(Exception $ex){
                 Twig::render("login/login.twig", ["errorMessage" => "Non sono stati inseriti tutti i dati!"]);

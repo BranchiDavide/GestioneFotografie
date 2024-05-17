@@ -44,7 +44,8 @@ for(let btn of denyBtns){
 async function approveRequest(id){
     const data = {
         "id": id,
-        "action": "approve"
+        "action": "approve",
+        "CSRFToken": CSRFToken
     }
     let response = await fetch(URL + "controlpanel/managerequest", {
        method: "POST",
@@ -60,7 +61,8 @@ async function approveRequest(id){
 async function denyRequest(id){
     const data = {
         "id": id,
-        "action": "deny"
+        "action": "deny",
+        "CSRFToken": CSRFToken
     }
     let response = await fetch(URL + "controlpanel/managerequest", {
         method: "POST",

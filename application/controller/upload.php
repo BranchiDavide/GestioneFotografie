@@ -13,6 +13,10 @@ class upload
                     return;
                 }
                 if($_SERVER["REQUEST_METHOD"] == "POST"){
+                    if(!Session::validateCSRFToken()){
+                        Session::showCSRFTokenError();
+                        return;
+                    }
                     try{
                         $dataOra = Sanitizer::sanitize($_POST["data-ora"]);
                         $luogo = Sanitizer::sanitize($_POST["luogo"]);

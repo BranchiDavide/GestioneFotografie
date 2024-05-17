@@ -28,7 +28,8 @@ if(addValutazione){
             const data = {
                 "foto_id":fotoId,
                 "stelle":starsCount,
-                "action":"insert"
+                "action":"insert",
+                "CSRFToken":CSRFToken
             };
             let response = await fetch(URL + "fotografie/valuta", {
                 method: "POST",
@@ -65,7 +66,8 @@ if(updateValutazione){
         const data = {
             "foto_id":fotoId,
             "stelle":starsCount,
-            "action":"update"
+            "action":"update",
+            "CSRFToken":CSRFToken
         };
         let response = await fetch(URL + "fotografie/valuta", {
             method: "POST",

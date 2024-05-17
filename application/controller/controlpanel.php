@@ -24,6 +24,15 @@ class controlpanel
                     header("Content-Type: application/json; charset=UTF-8");
                     $json = file_get_contents('php://input');
                     $data = json_decode($json, true);
+                    if(isset($data["CSRFToken"])){
+                        if(!Session::validateCSRFToken(true, $data["CSRFToken"])){
+                            Session::showCSRFTokenError(true);
+                            return;
+                        }
+                    }else{
+                        Session::showCSRFTokenError(true);
+                        return;
+                    }
                     try{
                         $id = Sanitizer::sanitize($data["id"]);
                         $action = Sanitizer::sanitize($data["action"]);

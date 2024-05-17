@@ -18,6 +18,7 @@ class fotografie
                 return;
             }
             $fotografia = $fotografiaMapper->changeIdUtenteToName($fotografia);
+            $fotografiaId = $fotografiaMapper->getById($id);
             $score =  $valutazioneMapper->getScore($id);
             $valutazioni = $valutazioneMapper->getAll($id);
             $valutazioni = $valutazioneMapper->changeIdUtenteToName($valutazioni);
@@ -33,7 +34,7 @@ class fotografie
             }
             $commenti = $commentoMapper->getAllOfPhoto($id);
             $commentiWithNome = $commentoMapper->changeIdUtenteToName($commentoMapper->getAllOfPhoto($id));
-            Twig::render("fotografie/dettagli.twig", ["fotografia" => $fotografia, "score" => $score, "valutazioni" => $valutazioni, "valutazionePresente" => $valutazionePresente, "commenti" => $commenti, "commentiWithNome" => $commentiWithNome]);
+            Twig::render("fotografie/dettagli.twig", ["fotografia" => $fotografia, "fotografiaId" => $fotografiaId,  "score" => $score, "valutazioni" => $valutazioni, "valutazionePresente" => $valutazionePresente, "commenti" => $commenti, "commentiWithNome" => $commentiWithNome]);
             unset($_SESSION['showSuccessMsg']);
         }catch (Exception $e){
             Twig::render("_templates/errorPage.twig", ["errorMsg" => "Fotografia non trovata!"]);
@@ -48,11 +49,26 @@ class fotografie
                 header("Content-Type: application/json; charset=UTF-8");
                 $json = file_get_contents('php://input');
                 $data = json_decode($json, true);
+                if(isset($data["CSRFToken"])){
+                    if(!Session::validateCSRFToken(true, $data["CSRFToken"])){
+                        Session::showCSRFTokenError(true);
+                        return;
+                    }
+                }else{
+                    Session::showCSRFTokenError(true);
+                    return;
+                }
                 try{
                     $foto_id = Sanitizer::sanitize($data["foto_id"]);
                     $stelle = Sanitizer::sanitize($data["stelle"]);
                     $action = Sanitizer::sanitize($data["action"]);
                     if(!$fotografiaMapper->getById($foto_id)){ //La foto non esiste
+                        $response = array("status" => "FAILED");
+                        echo json_encode($response);
+                        return;
+                    }
+                    $fotografia = $fotografiaMapper->getById($foto_id);
+                    if($fotografia->getUtenteId() == $_SESSION["utente-id"]){ //Non è possibile valutare le proprie fotografie
                         $response = array("status" => "FAILED");
                         echo json_encode($response);
                         return;
@@ -99,6 +115,10 @@ class fotografie
     public function commenta($id = null){
         if(Session::hasSessionType()){
             if($_SERVER["REQUEST_METHOD"] == "POST"){
+                if(!Session::validateCSRFToken()){
+                    Session::showCSRFTokenError();
+                    return;
+                }
                 try{
                     $id = Sanitizer::sanitize($id);
                     $contenuto = Sanitizer::sanitize($_POST["contenuto"]);
@@ -136,6 +156,15 @@ class fotografie
                 header("Content-Type: application/json; charset=UTF-8");
                 $json = file_get_contents('php://input');
                 $data = json_decode($json, true);
+                if(isset($data["CSRFToken"])){
+                    if(!Session::validateCSRFToken(true, $data["CSRFToken"])){
+                        Session::showCSRFTokenError(true);
+                        return;
+                    }
+                }else{
+                    Session::showCSRFTokenError(true);
+                    return;
+                }
                 try{
                     $id = Sanitizer::sanitize($data["id"]);
                     $commento = $commentoMapper->getById($id);
@@ -173,6 +202,15 @@ class fotografie
                 header("Content-Type: application/json; charset=UTF-8");
                 $json = file_get_contents('php://input');
                 $data = json_decode($json, true);
+                if(isset($data["CSRFToken"])){
+                    if(!Session::validateCSRFToken(true, $data["CSRFToken"])){
+                        Session::showCSRFTokenError(true);
+                        return;
+                    }
+                }else{
+                    Session::showCSRFTokenError(true);
+                    return;
+                }
                 try{
                     $id = Sanitizer::sanitize($data["id"]);
                     $contenuto = Sanitizer::sanitize($data["contenuto"]);

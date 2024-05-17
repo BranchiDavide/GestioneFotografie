@@ -14,7 +14,8 @@ for(let icon of deleteIcons){
         }).then(async(result) => {
             if (result.isConfirmed) {
                 const data = {
-                    "id":icon.getAttribute("data-commentId")
+                    "id":icon.getAttribute("data-commentId"),
+                    "CSRFToken": CSRFToken
                 };
                 let response = await fetch(URL + "fotografie/eliminacommento", {
                    method: "POST",
@@ -62,7 +63,8 @@ for(let icon of editIcons){
                 }
                 const data = {
                     "id":icon.getAttribute("data-commentId"),
-                    "contenuto":contenuto
+                    "contenuto":contenuto,
+                    "CSRFToken": CSRFToken
                 };
                 let response = await fetch(URL + "fotografie/modificacommento", {
                     method: "POST",

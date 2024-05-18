@@ -1,3 +1,5 @@
+# Script DB utilizzato per unit test
+
 DROP DATABASE IF EXISTS gestione_fotografie_test;
 CREATE DATABASE gestione_fotografie_test;
 USE gestione_fotografie_test;

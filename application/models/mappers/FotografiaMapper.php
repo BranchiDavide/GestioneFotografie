@@ -144,7 +144,6 @@ class FotografiaMapper
     public function search($filters, $value){
         $selectSql = "SELECT fotografia.*, utente.nome, utente.cognome FROM fotografia INNER JOIN utente ON fotografia.utente_id=utente.id WHERE ";
         $whereSql = array();
-        $joinSql = " INNER JOIN utente ON fotografia.utente_id=utente.id";
         for($i = 0; $i < count($filters); $i++){
             if($filters[$i] == "nome_fotografo"){
                 $filters[$i] = "utente.nome";
